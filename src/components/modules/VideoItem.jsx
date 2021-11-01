@@ -21,15 +21,15 @@ const VideoDescriptionContainer = styled.div`
   margin: 0.75rem 2rem 0.25rem 0px;
 `;
 
-function VideoItem() {
+function VideoItem({ title, thumbnail, rank }) {
   return (
     <Container>
       <ThumbnailContainer>
-        <Thumbnail src="https://i.ytimg.com/vi/Kevp2lFKSOg/mqdefault.jpg" alt="strawberry moon (strawberry moon)" />
+        <Thumbnail src={thumbnail} alt={title} />
       </ThumbnailContainer>
       <VideoDescriptionContainer>
-        <VideoRank>1</VideoRank>
-        <VideoTitle>strawberry moon (strawberry moon)</VideoTitle>
+        <VideoRank>{rank}</VideoRank>
+        <VideoTitle>{title}</VideoTitle>
         <AddListIcon />
       </VideoDescriptionContainer>
     </Container>
