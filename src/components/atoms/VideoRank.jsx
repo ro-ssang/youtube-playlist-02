@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   color: ${({ theme }) => theme.colors.secondary};
-  margin-right: 0.5 rem;
+  margin-right: 0.5rem;
 `;
 const Rank = styled.span``;
 const Hyphen = styled.span`

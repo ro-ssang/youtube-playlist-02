@@ -1,13 +1,17 @@
 import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import GlobalStyle from './assets/styles/GlobalStyle';
 import { defaultTheme } from './assets/styles/theme';
+import Home from './components/templates/Home';
 
 function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <GlobalStyle />
-      <div>Hello, world!</div>
+      <Router>
+        <Route path="/" exact component={Home} />
+      </Router>
     </ThemeProvider>
   );
 }

@@ -1,9 +1,6 @@
 import { createGlobalStyle, css } from 'styled-components';
-import { reset } from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
-  ${reset}
-
   * {
     margin: 0px;
     padding: 0px;
