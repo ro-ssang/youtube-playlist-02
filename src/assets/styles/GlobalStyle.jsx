@@ -7,8 +7,18 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
   ul, li {
     list-style: none;
+  }
+
+  input {
+    border: none;
+    outline: none;
   }
 
   ${({ theme }) => {
