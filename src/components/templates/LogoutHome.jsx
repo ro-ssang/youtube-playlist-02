@@ -6,7 +6,6 @@ import AuthBox from '../atoms/AuthBox';
 import BrowseItem from '../atoms/BrowseItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from '../modules/SearchForm';
-import LogoutBox from '../modules/LogoutBox';
 import LoginButton from '../atoms/LoginButton';
 
 const Wrapper = styled.div`

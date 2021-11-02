@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import GlobalStyle from './assets/styles/GlobalStyle';
 import { defaultTheme } from './assets/styles/theme';
 import Home from './components/pages/Home';
+import PlayList from './components/pages/PlayList';
 import Search from './components/pages/Search';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <GlobalStyle />
       <Router>
         <Route path="/" exact component={Home} />
+        <Route path="/playlist/:id" exact component={PlayList} />
         <Route path="/search" component={Search} />
       </Router>
     </ThemeProvider>

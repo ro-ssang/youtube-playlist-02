@@ -21,6 +21,11 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
   }
 
+  button {
+    border: none;
+    outline: none;
+  }
+
   ${({ theme }) => {
     return css`
       body {
