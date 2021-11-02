@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import AddPlayItem from '../atoms/AddPlayItem';
 import BrowseItem from '../atoms/BrowseItem';
+import ListTitle from '../atoms/ListTitle';
+import PlayItem from '../atoms/PlayItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from './SearchForm';
 
@@ -17,6 +20,7 @@ const Nav = styled.nav`
   overflow: auto;
 `;
 const BrowseList = styled.ul``;
+const PlayList = styled.ul``;
 
 function Aside({ children }) {
   return (
@@ -27,7 +31,11 @@ function Aside({ children }) {
         <BrowseList>
           <BrowseItem />
         </BrowseList>
-        {children}
+        <ListTitle>플레이리스트</ListTitle>
+        <PlayList>
+          <AddPlayItem />
+          <PlayItem text="요리" path="/playlist/PLnURkYeeEkiKJjDKapnRxLVesniKMYGQm" />
+        </PlayList>
       </Nav>
     </Container>
   );
