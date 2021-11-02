@@ -1,8 +1,8 @@
 import React from 'react';
-import LoginHome from '../templates/LoginHome';
+import LogoutHome from '../templates/LogoutHome';
 
 function Home() {
-  return <LoginHome />;
+  return <LogoutHome />;
 }
 
 export default Home;

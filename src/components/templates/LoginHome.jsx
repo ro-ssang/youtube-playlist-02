@@ -39,7 +39,7 @@ function LoginHome() {
   return (
     <Wrapper>
       <Aside>
-        <SiteLogo />
+        <SiteLogo isAside={true} />
         <SearchForm />
         <Nav>
           <BrowseList>

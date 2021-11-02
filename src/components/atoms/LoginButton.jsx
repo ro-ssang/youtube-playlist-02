@@ -6,7 +6,7 @@ const Container = styled.div`
   display: inline-flex;
   -webkit-box-align: center;
   align-items: center;
-  width: 100%;
+  width: ${({ width }) => width || '100%'};
   padding: 0.75rem 1rem;
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.googleBtn.color};
@@ -19,9 +19,9 @@ const GoogleIcon = styled(Google)`
 `;
 const Text = styled.span``;
 
-function LoginButton({ children }) {
+function LoginButton({ children, width }) {
   return (
-    <Container>
+    <Container width={width}>
       <GoogleIcon />
       <Text>{children}</Text>
     </Container>
