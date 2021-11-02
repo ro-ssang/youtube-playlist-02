@@ -4,9 +4,9 @@ import AddPlayItem from '../atoms/AddPlayItem';
 import AuthBox from '../atoms/AuthBox';
 import BrowseItem from '../atoms/BrowseItem';
 import ListTitle from '../atoms/ListTitle';
+import LoginButton from '../atoms/LoginButton';
 import PlayItem from '../atoms/PlayItem';
 import SiteLogo from '../atoms/SiteLogo';
-import LogoutBox from './LogoutBox';
 import SearchForm from './SearchForm';
 
 const Container = styled.aside`
@@ -40,11 +40,7 @@ function Aside({ children }) {
         </PlayList>
       </Nav>
       <AuthBox>
-        <LogoutBox
-          avatarUrl="https://lh3.googleusercontent.com/a/AATXAJxEa6-_FQ9x-ASpd6cIaHcq_gHEwuVkAMUQ_Nb-=s96-c"
-          username="유저이름"
-          logoutPath="/"
-        />
+        <LoginButton>Sign in With Google</LoginButton>
       </AuthBox>
     </Container>
   );
