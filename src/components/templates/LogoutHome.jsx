@@ -53,11 +53,7 @@ function LogoutHome() {
           </BrowseList>
         </Nav>
         <AuthBox>
-          <LogoutBox
-            avatarUrl="https://lh3.googleusercontent.com/a/AATXAJxEa6-_FQ9x-ASpd6cIaHcq_gHEwuVkAMUQ_Nb-=s96-c"
-            username="유저이름"
-            logoutPath="/"
-          />
+          <LoginButton>Sign in With Google</LoginButton>
         </AuthBox>
       </Aside>
       <Main>

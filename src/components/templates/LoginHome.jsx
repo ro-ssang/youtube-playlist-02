@@ -8,10 +8,10 @@ import AddPlayItem from '../atoms/AddPlayItem';
 import AuthBox from '../atoms/AuthBox';
 import BrowseItem from '../atoms/BrowseItem';
 import ListTitle from '../atoms/ListTitle';
-import LoginButton from '../atoms/LoginButton';
 import PlayItem from '../atoms/PlayItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from '../modules/SearchForm';
+import LogoutBox from '../modules/LogoutBox';
 
 const Wrapper = styled.div`
   display: grid;
@@ -52,7 +52,11 @@ function LoginHome() {
           </PlayList>
         </Nav>
         <AuthBox>
-          <LoginButton>Sign in With Google</LoginButton>
+          <LogoutBox
+            avatarUrl="https://lh3.googleusercontent.com/a/AATXAJxEa6-_FQ9x-ASpd6cIaHcq_gHEwuVkAMUQ_Nb-=s96-c"
+            username="유저이름"
+            logoutPath="/"
+          />
         </AuthBox>
       </Aside>
       <Main>
