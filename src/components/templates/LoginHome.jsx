@@ -12,6 +12,7 @@ import PlayItem from '../atoms/PlayItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from '../modules/SearchForm';
 import LogoutBox from '../modules/LogoutBox';
+import Loader from '../atoms/Loader';
 
 const Wrapper = styled.div`
   display: grid;
@@ -61,7 +62,7 @@ function LoginHome({ logout, profile, setProfile, loadingPopularVideos, popularV
       </Aside>
       <Main>
         <Section>
-          {loadingPopularVideos && <div>로딩중...</div>}
+          {loadingPopularVideos && <Loader />}
           {!loadingPopularVideos && popularVideos && (
             <>
               <SectionTitle>인기 뮤직 비디오</SectionTitle>
