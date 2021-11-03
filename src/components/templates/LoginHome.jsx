@@ -36,10 +36,21 @@ const VideoList = styled.ul`
   flex-wrap: wrap;
 `;
 
-function LoginHome({ logout, profile, setProfile, loadingPopularVideos, popularVideos, getPopularVideos }) {
+function LoginHome({
+  logout,
+  profile,
+  setProfile,
+  loadingPlaylists,
+  playlists,
+  getPlaylists,
+  loadingPopularVideos,
+  popularVideos,
+  getPopularVideos,
+}) {
   useEffect(() => {
     getPopularVideos();
-  }, [getPopularVideos]);
+    getPlaylists();
+  }, [getPopularVideos, getPlaylists]);
 
   return (
     <Wrapper>
@@ -53,7 +64,16 @@ function LoginHome({ logout, profile, setProfile, loadingPopularVideos, popularV
           <ListTitle>플레이리스트</ListTitle>
           <PlayList>
             <AddPlayItem />
-            <PlayItem text="요리" path="/playlist/PLnURkYeeEkiKJjDKapnRxLVesniKMYGQm" />
+            {loadingPlaylists && <Loader />}
+            {!loadingPlaylists &&
+              playlists &&
+              playlists.map((item) => {
+                const {
+                  id,
+                  snippet: { title },
+                } = item;
+                return <PlayItem key={id} text={title} path={`/playlist/${id}`} />;
+              })}
           </PlayList>
         </Nav>
         <AuthBox>
@@ -62,10 +82,10 @@ function LoginHome({ logout, profile, setProfile, loadingPopularVideos, popularV
       </Aside>
       <Main>
         <Section>
+          <SectionTitle>인기 뮤직 비디오</SectionTitle>
           {loadingPopularVideos && <Loader />}
           {!loadingPopularVideos && popularVideos && (
             <>
-              <SectionTitle>인기 뮤직 비디오</SectionTitle>
               <VideoList>
                 {popularVideos.map((video, index) => {
                   const {

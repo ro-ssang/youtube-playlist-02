@@ -18,3 +18,15 @@ export const videosApi = {
       },
     }),
 };
+
+export const playlistsApi = {
+  getLists: () =>
+    instance.get('/playlists', {
+      params: {
+        part: 'snippet',
+        mine: true,
+        maxResults: 30,
+        access_token: localStorage.getItem(LS_TOKEN),
+      },
+    }),
+};
