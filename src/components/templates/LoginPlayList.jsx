@@ -12,6 +12,7 @@ import SearchForm from '../modules/SearchForm';
 import LogoutBox from '../modules/LogoutBox';
 import PlayItemInfo from '../modules/PlayItemInfo';
 import PlayItemTable from '../modules/PlayItemTable';
+import Loader from '../atoms/Loader';
 
 const Wrapper = styled.div`
   display: grid;
@@ -30,7 +31,7 @@ const Section = styled.section`
   padding: 2.5rem;
 `;
 
-function LoginPlayList() {
+function LoginPlayList({ loadingPlaylists, loadingPlayItems, playlists, playItems, profile, setProfile, logout }) {
   return (
     <Wrapper>
       <Aside>
@@ -43,21 +44,27 @@ function LoginPlayList() {
           <ListTitle>플레이리스트</ListTitle>
           <PlayList>
             <AddPlayItem />
-            <PlayItem text="요리" path="/playlist/PLnURkYeeEkiKJjDKapnRxLVesniKMYGQm" />
+            {loadingPlaylists && <Loader />}
+            {!loadingPlaylists &&
+              playlists &&
+              playlists.map((item) => {
+                const {
+                  id,
+                  snippet: { title },
+                } = item;
+                return <PlayItem key={id} text={title} path={`/playlist/${id}`} />;
+              })}
           </PlayList>
         </Nav>
         <AuthBox>
-          <LogoutBox
-            avatarUrl="https://lh3.googleusercontent.com/a/AATXAJxEa6-_FQ9x-ASpd6cIaHcq_gHEwuVkAMUQ_Nb-=s96-c"
-            username="유저이름"
-            logoutPath="/"
-          />
+          <LogoutBox profile={profile} setProfile={setProfile} logoutPath="/" logout={logout} />
         </AuthBox>
       </Aside>
       <Main>
         <Section>
           <PlayItemInfo />
-          <PlayItemTable />
+          {loadingPlayItems && <Loader />}
+          {!loadingPlayItems && <PlayItemTable loadingPlayItems={loadingPlayItems} playItems={playItems} />}
         </Section>
       </Main>
     </Wrapper>

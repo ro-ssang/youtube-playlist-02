@@ -24,7 +24,7 @@ function App({ isLogin, login }) {
       <GlobalStyle />
       <Router>
         <Route path="/" exact component={Home} />
-        <Route path="/playlist/:videoId" component={PlayList} />
+        <Route path="/playlist/:playlistId" component={PlayList} />
         <Route path="/search" component={Search} />
         {isLogin && (
           <>

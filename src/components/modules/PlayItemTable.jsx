@@ -15,7 +15,7 @@ const TBody = styled.tbody`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
-function PlayItemTable() {
+function PlayItemTable({ loadingPlayItems, playItems }) {
   return (
     <Container>
       <thead>
@@ -28,32 +28,18 @@ function PlayItemTable() {
           <Th width="10%">시간</Th>
         </tr>
       </thead>
-      <TBody>
-        <Tr
-          thumbnailUrl="https://i.ytimg.com/vi/FtzvusgwigU/mqdefault.jpg"
-          title="치즈감자 호떡 Cheese Hotteok"
-          artist="하루한끼 one meal a day"
-          time="4:02"
-        />
-        <Tr
-          thumbnailUrl="https://i.ytimg.com/vi/FtzvusgwigU/mqdefault.jpg"
-          title="치즈감자 호떡 Cheese Hotteok"
-          artist="하루한끼 one meal a day"
-          time="4:02"
-        />
-        <Tr
-          thumbnailUrl="https://i.ytimg.com/vi/FtzvusgwigU/mqdefault.jpg"
-          title="치즈감자 호떡 Cheese Hotteok"
-          artist="하루한끼 one meal a day"
-          time="4:02"
-        />
-        <Tr
-          thumbnailUrl="https://i.ytimg.com/vi/FtzvusgwigU/mqdefault.jpg"
-          title="치즈감자 호떡 Cheese Hotteok"
-          artist="하루한끼 one meal a day"
-          time="4:02"
-        />
-      </TBody>
+      {!loadingPlayItems && playItems && (
+        <TBody>
+          {playItems.map((item) => {
+            const {
+              id,
+              snippet: { title, videoOwnerChannelTitle: artist },
+            } = item;
+            const thumbnailUrl = item.snippet.thumbnails.medium?.url;
+            return <Tr key={id} thumbnailUrl={thumbnailUrl} title={title} artist={artist} time="4:02" />;
+          })}
+        </TBody>
+      )}
     </Container>
   );
 }

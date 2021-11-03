@@ -31,7 +31,7 @@ function videos(state = initialState, action) {
     case GET_POPULAR_VIDEOS_SUCCESS:
       return { ...state, loading: { ...state.loading, GET_POPULAR_VIDEOS: false }, popularVideos: action.payload };
     case GET_POPULAR_VIDEOS_FAILURE:
-      return { ...state, loading: { ...state.loading, GET_POPULAR_VIDEOS: true } };
+      return { ...state, loading: { ...state.loading, GET_POPULAR_VIDEOS: false } };
     default:
       return state;
   }

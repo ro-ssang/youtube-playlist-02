@@ -53,7 +53,9 @@ const Thumbnail = styled.img`
   object-fit: cover;
   border-radius: 3px;
 `;
-const TitleContainer = styled.div``;
+const TitleContainer = styled.div`
+  min-width: 0px;
+`;
 const Title = styled.h3`
   font-size: 13px;
   font-weight: 400;

@@ -20,12 +20,24 @@ export const videosApi = {
 };
 
 export const playlistsApi = {
-  getLists: () =>
+  getPlaylists: () =>
     instance.get('/playlists', {
       params: {
         part: 'snippet',
         mine: true,
         maxResults: 30,
+        access_token: localStorage.getItem(LS_TOKEN),
+      },
+    }),
+};
+
+export const playItemsApi = {
+  getPlayItems: (id) =>
+    instance.get('/playlistItems', {
+      params: {
+        part: 'snippet',
+        playlistId: id,
+        maxResults: 50,
         access_token: localStorage.getItem(LS_TOKEN),
       },
     }),
