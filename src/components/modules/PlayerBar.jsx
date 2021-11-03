@@ -9,7 +9,8 @@ const Container = styled.div`
   position: fixed;
   bottom: 0px;
   right: 0px;
-  display: flex;
+  /* display: flex; */
+  display: none;
   -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: justify;

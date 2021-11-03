@@ -7,8 +7,6 @@ import BrowseItem from '../atoms/BrowseItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from '../modules/SearchForm';
 import LoginButton from '../atoms/LoginButton';
-import { connect } from 'react-redux';
-import { login } from '../../store/auth';
 
 const Wrapper = styled.div`
   display: grid;
@@ -75,6 +73,4 @@ function LogoutHome({ login }) {
   );
 }
 
-export default connect(() => ({}), {
-  login,
-})(LogoutHome);
+export default LogoutHome;

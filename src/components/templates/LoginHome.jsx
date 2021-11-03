@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import SectionTitle from '../atoms/SectionTitle';
 import Aside from '../modules/Aside';
@@ -12,8 +12,6 @@ import PlayItem from '../atoms/PlayItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from '../modules/SearchForm';
 import LogoutBox from '../modules/LogoutBox';
-import { connect } from 'react-redux';
-import { logout } from '../../store/auth';
 
 const Wrapper = styled.div`
   display: grid;
@@ -37,7 +35,11 @@ const VideoList = styled.ul`
   flex-wrap: wrap;
 `;
 
-function LoginHome({ logout }) {
+function LoginHome({ logout, profile, setProfile, loadingPopularVideos, popularVideos, getPopularVideos }) {
+  useEffect(() => {
+    getPopularVideos();
+  }, [getPopularVideos]);
+
   return (
     <Wrapper>
       <Aside>
@@ -54,30 +56,35 @@ function LoginHome({ logout }) {
           </PlayList>
         </Nav>
         <AuthBox>
-          <LogoutBox
-            avatarUrl="https://lh3.googleusercontent.com/a/AATXAJxEa6-_FQ9x-ASpd6cIaHcq_gHEwuVkAMUQ_Nb-=s96-c"
-            username="유저이름"
-            logoutPath="/"
-            logout={logout}
-          />
+          <LogoutBox profile={profile} setProfile={setProfile} logoutPath="/" logout={logout} />
         </AuthBox>
       </Aside>
       <Main>
         <Section>
-          <SectionTitle>인기 뮤직 비디오</SectionTitle>
-          <VideoList>
-            <VideoItem
-              title="strawberry moon (strawberry moon)"
-              thumbnail="https://i.ytimg.com/vi/Kevp2lFKSOg/mqdefault.jpg"
-              rank="1"
-            />
-          </VideoList>
+          {loadingPopularVideos && <div>로딩중...</div>}
+          {!loadingPopularVideos && popularVideos && (
+            <>
+              <SectionTitle>인기 뮤직 비디오</SectionTitle>
+              <VideoList>
+                {popularVideos.map((video, index) => {
+                  const {
+                    id,
+                    snippet: {
+                      title,
+                      thumbnails: {
+                        medium: { url: thumbnail },
+                      },
+                    },
+                  } = video;
+                  return <VideoItem key={id} title={title} thumbnail={thumbnail} rank={index + 1} />;
+                })}
+              </VideoList>
+            </>
+          )}
         </Section>
       </Main>
     </Wrapper>
   );
 }
 
-export default connect(() => ({}), {
-  logout,
-})(LoginHome);
+export default LoginHome;

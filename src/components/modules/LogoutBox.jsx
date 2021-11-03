@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { CLIENT_ID } from '../../contants';
+import { CLIENT_ID, LS_PROFILE } from '../../contants';
 import Avatar from '../atoms/Avatar';
 
 const Username = styled.div`
@@ -14,21 +14,27 @@ const LogoutLink = styled(Link)`
   cursor: pointer;
 `;
 
-function LogoutBox({ avatarUrl, username, logoutPath, logout }) {
+function LogoutBox({ profile, setProfile, logoutPath, logout }) {
+  useEffect(() => {
+    const { name, imageUrl } = JSON.parse(localStorage.getItem(LS_PROFILE));
+    setProfile(name, imageUrl);
+  }, [setProfile]);
+
   const onSuccess = useCallback(() => {
     console.log('Logout made successfully');
     localStorage.clear();
     logout && logout();
-  }, [logout]);
+    setProfile(null);
+  }, [logout, setProfile]);
 
   return (
     <GoogleLogout
       clientId={CLIENT_ID}
       render={(renderProps) => (
         <>
-          <Avatar avatarUrl={avatarUrl} />
+          <Avatar avatarUrl={profile.avatarUrl} />
           <div>
-            <Username>{username}</Username>
+            <Username>{profile.name}</Username>
             <LogoutLink to={logoutPath} onClick={renderProps.onClick} disabled={renderProps.disabled}>
               로그아웃
             </LogoutLink>

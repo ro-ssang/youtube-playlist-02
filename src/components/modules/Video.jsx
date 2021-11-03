@@ -7,7 +7,8 @@ const Container = styled.div`
       position: fixed;
       top: 0px;
       right: ${theme.sizes.scrollBar.width};
-      display: flex;
+      /* display: flex; */
+      display: none;
       -webkit-box-align: center;
       align-items: center;
       -webkit-box-pack: center;

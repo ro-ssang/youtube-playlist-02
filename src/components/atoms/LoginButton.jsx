@@ -26,7 +26,7 @@ function LoginButton({ children, width, login }) {
     (res) => {
       console.log('[Login Success]', res);
       localStorage.setItem(LS_PROFILE, JSON.stringify(res.profileObj));
-      localStorage.setItem(LS_TOKEN, res.tokenId);
+      localStorage.setItem(LS_TOKEN, res.accessToken);
       login && login();
     },
     [login]
