@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import GoogleLogin from 'react-google-login';
 import styled from 'styled-components';
 import { ReactComponent as Google } from '../../assets/icons/google.svg';
+import { CLIENT_ID, LS_PROFILE, LS_TOKEN } from '../../contants';
 
 const Container = styled.div`
   display: inline-flex;
@@ -19,12 +21,35 @@ const GoogleIcon = styled(Google)`
 `;
 const Text = styled.span``;
 
-function LoginButton({ children, width }) {
+function LoginButton({ children, width, login }) {
+  const onSuccess = useCallback(
+    (res) => {
+      console.log('[Login Success]', res);
+      localStorage.setItem(LS_PROFILE, JSON.stringify(res.profileObj));
+      localStorage.setItem(LS_TOKEN, res.tokenId);
+      login && login();
+    },
+    [login]
+  );
+
+  const onFailure = useCallback((res) => {
+    console.log('[Logout filed]');
+  }, []);
+
   return (
-    <Container width={width}>
-      <GoogleIcon />
-      <Text>{children}</Text>
-    </Container>
+    <GoogleLogin
+      clientId={CLIENT_ID}
+      render={(renderProps) => (
+        <Container width={width} onClick={renderProps.onClick} disabled={renderProps.disabled}>
+          <GoogleIcon />
+          <Text>{children}</Text>
+        </Container>
+      )}
+      onSuccess={onSuccess}
+      onFailure={onFailure}
+      cookiePolicy={'single_host_origin'}
+      isSignedIn={true}
+    />
   );
 }
 

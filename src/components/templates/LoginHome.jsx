@@ -12,6 +12,8 @@ import PlayItem from '../atoms/PlayItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from '../modules/SearchForm';
 import LogoutBox from '../modules/LogoutBox';
+import { connect } from 'react-redux';
+import { logout } from '../../store/auth';
 
 const Wrapper = styled.div`
   display: grid;
@@ -35,7 +37,7 @@ const VideoList = styled.ul`
   flex-wrap: wrap;
 `;
 
-function LoginHome() {
+function LoginHome({ logout }) {
   return (
     <Wrapper>
       <Aside>
@@ -56,6 +58,7 @@ function LoginHome() {
             avatarUrl="https://lh3.googleusercontent.com/a/AATXAJxEa6-_FQ9x-ASpd6cIaHcq_gHEwuVkAMUQ_Nb-=s96-c"
             username="유저이름"
             logoutPath="/"
+            logout={logout}
           />
         </AuthBox>
       </Aside>
@@ -75,4 +78,6 @@ function LoginHome() {
   );
 }
 
-export default LoginHome;
+export default connect(() => ({}), {
+  logout,
+})(LoginHome);

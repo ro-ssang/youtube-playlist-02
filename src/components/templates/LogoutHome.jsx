@@ -7,6 +7,8 @@ import BrowseItem from '../atoms/BrowseItem';
 import SiteLogo from '../atoms/SiteLogo';
 import SearchForm from '../modules/SearchForm';
 import LoginButton from '../atoms/LoginButton';
+import { connect } from 'react-redux';
+import { login } from '../../store/auth';
 
 const Wrapper = styled.div`
   display: grid;
@@ -40,7 +42,7 @@ const Image = styled.img`
   object-fit: cover;
 `;
 
-function LogoutHome() {
+function LogoutHome({ login }) {
   return (
     <Wrapper>
       <Aside>
@@ -52,7 +54,7 @@ function LogoutHome() {
           </BrowseList>
         </Nav>
         <AuthBox>
-          <LoginButton>Sign in With Google</LoginButton>
+          <LoginButton login={login}>Sign in With Google</LoginButton>
         </AuthBox>
       </Aside>
       <Main>
@@ -73,4 +75,6 @@ function LogoutHome() {
   );
 }
 
-export default LogoutHome;
+export default connect(() => ({}), {
+  login,
+})(LogoutHome);
