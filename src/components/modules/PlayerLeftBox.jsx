@@ -186,7 +186,10 @@ function PlayerLeftBox({ player, togglePlayer, drag, dragVolume, volume, setVolu
 
   useEffect(() => {
     localStorage.setItem(LS_VOLUME, 50);
-  }, [setVolume]);
+    if (player) {
+      player.setVolume(50);
+    }
+  }, [player]);
 
   return (
     <Container>
