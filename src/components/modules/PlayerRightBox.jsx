@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Pause } from '../../assets/icons/pause.svg';
 import { ReactComponent as Prev } from '../../assets/icons/prev.svg';
 import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { ReactComponent as Next } from '../../assets/icons/next.svg';
+import { formatTime } from '../../lib/formatTime';
 
 const Container = styled.div`
   height: 100%;
@@ -53,7 +54,17 @@ const NextIcon = styled(Next)`
   cursor: pointer;
 `;
 
-function PlayerRightBox({ player, playing, playPlayer, puasePlayer }) {
+function PlayerRightBox({
+  player,
+  videoInfo,
+  playing,
+  playPlayer,
+  puasePlayer,
+  currentTime,
+  setCurrentTime,
+  duration,
+  setDuration,
+}) {
   const onTogglePlay = useCallback(() => {
     if (playing) {
       player.pauseVideo();
@@ -64,9 +75,28 @@ function PlayerRightBox({ player, playing, playPlayer, puasePlayer }) {
     }
   }, [player, playing, playPlayer, puasePlayer]);
 
+  useEffect(() => {
+    if (player) {
+      setCurrentTime(0);
+      setDuration(player.getDuration());
+    }
+  }, [player, videoInfo, setCurrentTime, setDuration]);
+
+  useEffect(() => {
+    let timerId;
+    if (playing) {
+      timerId = setTimeout(() => {
+        setCurrentTime(player.getCurrentTime());
+      }, 1000);
+    }
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [player, playing, setCurrentTime, currentTime]);
+
   return (
     <Container>
-      <TimeLapse>0:00 / 3:25</TimeLapse>
+      <TimeLapse>{`${formatTime(currentTime)} / ${formatTime(duration)}`}</TimeLapse>
       <IconContainer>
         <PrevIcon />
       </IconContainer>

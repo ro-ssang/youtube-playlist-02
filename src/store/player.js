@@ -9,6 +9,8 @@ const PAUSE = 'player/PAUSE';
 const DRAGVOLUME = 'player/DRAGVOLUME';
 const VOLUME = 'player/VOLUME';
 const MUTE = 'player/MUTE';
+const CURRENT_TIME = 'player/CURRENT_TIEM';
+const DURATION = 'player/DURATION';
 
 export const setPlayer = (player) => ({ type: PLAYER, payload: player });
 export const setVideoInfo = (id, title, channelTitle, thumbnail, publishedAt) => ({
@@ -23,7 +25,9 @@ export const playPlayer = () => ({ type: PLAY });
 export const puasePlayer = () => ({ type: PAUSE });
 export const dragVolume = (bool) => ({ type: DRAGVOLUME, payload: bool });
 export const setVolume = (percent) => ({ type: VOLUME, payload: percent });
-export const setMute = (bool) => ({ type: MUTE, payload: bool });
+export const setMute = (bool) => ({ type: VOLUME, payload: bool });
+export const setCurrentTime = (time) => ({ type: CURRENT_TIME, payload: time });
+export const setDuration = (time) => ({ type: DURATION, payload: time });
 
 const initialState = {
   player: null,
@@ -36,6 +40,8 @@ const initialState = {
   drag: false,
   volume: 50,
   mute: false,
+  currentTime: 0,
+  duration: 0,
 };
 
 function player(state = initialState, action) {
@@ -62,6 +68,10 @@ function player(state = initialState, action) {
       return { ...state, volume: action.payload };
     case MUTE:
       return { ...state, mute: action.payload };
+    case CURRENT_TIME:
+      return { ...state, currentTime: action.payload };
+    case DURATION:
+      return { ...state, duration: action.payload };
     default:
       return state;
   }

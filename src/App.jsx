@@ -20,6 +20,8 @@ import {
   dragVolume,
   setVolume,
   setMute,
+  setCurrentTime,
+  setDuration,
 } from './store/player';
 
 function App({
@@ -42,6 +44,10 @@ function App({
   setVolume,
   mute,
   setMute,
+  currentTime,
+  setCurrentTime,
+  duration,
+  setDuration,
 }) {
   useEffect(() => {
     if (localStorage.getItem(LS_TOKEN)) {
@@ -71,6 +77,10 @@ function App({
               setVolume={setVolume}
               mute={mute}
               setMute={setMute}
+              currentTime={currentTime}
+              setCurrentTime={setCurrentTime}
+              duration={duration}
+              setDuration={setDuration}
             />
             <Video
               videoInfo={videoInfo}
@@ -101,6 +111,20 @@ export default connect(
     drag: player.drag,
     volume: player.volume,
     mute: player.mute,
+    currentTime: player.currentTime,
+    duration: player.duration,
   }),
-  { login, togglePlayer, readyPlayer, setPlayer, playPlayer, puasePlayer, dragVolume, setVolume, setMute }
+  {
+    login,
+    togglePlayer,
+    readyPlayer,
+    setPlayer,
+    playPlayer,
+    puasePlayer,
+    dragVolume,
+    setVolume,
+    setMute,
+    setCurrentTime,
+    setDuration,
+  }
 )(App);

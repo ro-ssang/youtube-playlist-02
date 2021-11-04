@@ -47,6 +47,10 @@ function PlayerBar({
   setVolume,
   mute,
   setMute,
+  currentTime,
+  setCurrentTime,
+  duration,
+  setDuration,
 }) {
   return (
     <Container>
@@ -69,7 +73,17 @@ function PlayerBar({
           year={videoInfo.publishedAt.substring(0, 4)}
         />
       )}
-      <PlayerRightBox player={player} playing={playing} playPlayer={playPlayer} puasePlayer={puasePlayer} />
+      <PlayerRightBox
+        player={player}
+        videoInfo={videoInfo}
+        playing={playing}
+        playPlayer={playPlayer}
+        puasePlayer={puasePlayer}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+        duration={duration}
+        setDuration={setDuration}
+      />
     </Container>
   );
 }
