@@ -51,10 +51,23 @@ function PlayerBar({
   setCurrentTime,
   duration,
   setDuration,
+  dragProgress,
+  dragProgressBar,
+  progress,
+  setProgress,
 }) {
   return (
     <Container>
-      <ProgressBar />
+      <ProgressBar
+        player={player}
+        duration={duration}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+        dragProgress={dragProgress}
+        dragProgressBar={dragProgressBar}
+        progress={progress}
+        setProgress={setProgress}
+      />
       <PlayerLeftBox
         player={player}
         togglePlayer={togglePlayer}

@@ -18,10 +18,12 @@ import {
   playPlayer,
   puasePlayer,
   dragVolume,
+  dragProgressBar,
   setVolume,
   setMute,
   setCurrentTime,
   setDuration,
+  setProgress,
 } from './store/player';
 
 function App({
@@ -48,6 +50,10 @@ function App({
   setCurrentTime,
   duration,
   setDuration,
+  dragProgress,
+  dragProgressBar,
+  progress,
+  setProgress,
 }) {
   useEffect(() => {
     if (localStorage.getItem(LS_TOKEN)) {
@@ -81,6 +87,10 @@ function App({
               setCurrentTime={setCurrentTime}
               duration={duration}
               setDuration={setDuration}
+              dragProgress={dragProgress}
+              dragProgressBar={dragProgressBar}
+              progress={progress}
+              setProgress={setProgress}
             />
             <Video
               videoInfo={videoInfo}
@@ -109,7 +119,9 @@ export default connect(
     isReady: player.ready,
     isRender: player.render,
     drag: player.drag,
+    dragProgress: player.dragProgress,
     volume: player.volume,
+    progress: player.progress,
     mute: player.mute,
     currentTime: player.currentTime,
     duration: player.duration,
@@ -122,9 +134,11 @@ export default connect(
     playPlayer,
     puasePlayer,
     dragVolume,
+    dragProgressBar,
     setVolume,
     setMute,
     setCurrentTime,
     setDuration,
+    setProgress,
   }
 )(App);

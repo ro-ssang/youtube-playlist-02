@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import { SIDE_BAR_WIDTH } from '../../contants';
 
 const Container = styled.div`
   position: absolute;
@@ -30,12 +31,12 @@ const RedBar = styled.div`
   top: 0px;
   height: 100%;
   background-color: rgb(255, 0, 0);
-  width: 35.9266%;
+  width: ${({ progress }) => progress + '%'};
 `;
 export const CircleContainer = styled.div`
   position: absolute;
   top: 0px;
-  left: 35.9266%;
+  left: ${({ progress }) => progress + '%'};
   display: none;
   -webkit-box-align: center;
   align-items: center;
@@ -52,16 +53,92 @@ const Circle = styled.div`
   border-radius: 50%;
 `;
 
-function ProgressBar() {
+function calculatePercent(clientX, width, offsetLeft, progress) {
+  let percent = progress || ((clientX - offsetLeft - SIDE_BAR_WIDTH) / width) * 100;
+
+  if (percent < 0) percent = 0;
+  if (percent > 100) percent = 100;
+
+  return percent;
+}
+
+function ProgressBar({
+  player,
+  duration,
+  currentTime,
+  setCurrentTime,
+  dragProgress,
+  dragProgressBar,
+  progress,
+  setProgress,
+}) {
+  const progressBarCont = useRef();
+
+  const onMouseDownProgress = useCallback(
+    (event) => {
+      console.log('mouse down');
+      const clientX = event.clientX;
+      const width = progressBarCont.current.clientWidth;
+      const offsetLeft = progressBarCont.current.offsetLeft;
+      dragProgressBar(true);
+      const percent = calculatePercent(clientX, width, offsetLeft);
+      setProgress(percent);
+      if (player) {
+        const seconds = (duration * percent) / 100;
+        setCurrentTime(seconds);
+        player.seekTo(seconds);
+      }
+    },
+    [player, duration, setCurrentTime, dragProgressBar, setProgress]
+  );
+
+  const onMouseMove = useCallback(
+    (event) => {
+      if (dragProgress) {
+        console.log('mouse move');
+        const clientX = event.clientX;
+        const width = progressBarCont.current.clientWidth;
+        const offsetLeft = progressBarCont.current.offsetLeft;
+        const percent = calculatePercent(clientX, width, offsetLeft);
+        setProgress(percent);
+        if (player) {
+          const seconds = (duration * percent) / 100;
+          setCurrentTime(seconds);
+          player.seekTo(seconds);
+        }
+      }
+    },
+    [player, duration, setCurrentTime, dragProgress, setProgress]
+  );
+
+  const onMouseUp = useCallback(() => {
+    console.log('mouse up');
+    dragProgressBar(false);
+  }, [dragProgressBar]);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [onMouseUp, onMouseMove]);
+
+  useEffect(() => {
+    const percent = (currentTime / duration) * 100;
+    setProgress(percent);
+  }, [currentTime, duration, setProgress]);
+
   return (
-    <Container>
+    <Container ref={progressBarCont} onMouseDown={onMouseDownProgress}>
       <BarContainer>
         <BarWrapper>
           <GrayBar />
-          <RedBar />
+          <RedBar progress={progress} />
         </BarWrapper>
       </BarContainer>
-      <CircleContainer>
+      <CircleContainer progress={progress}>
         <Circle />
       </CircleContainer>
     </Container>

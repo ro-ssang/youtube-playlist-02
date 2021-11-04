@@ -7,7 +7,9 @@ const LOAD = 'player/LOAD';
 const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
 const DRAGVOLUME = 'player/DRAGVOLUME';
+const DRAGPROGRESSBAR = 'player/DRAGPROGRESSBAR';
 const VOLUME = 'player/VOLUME';
+const PROGRESS = 'player/PROGRESS';
 const MUTE = 'player/MUTE';
 const CURRENT_TIME = 'player/CURRENT_TIEM';
 const DURATION = 'player/DURATION';
@@ -24,7 +26,9 @@ export const loadPlayer = () => ({ type: LOAD });
 export const playPlayer = () => ({ type: PLAY });
 export const puasePlayer = () => ({ type: PAUSE });
 export const dragVolume = (bool) => ({ type: DRAGVOLUME, payload: bool });
+export const dragProgressBar = (bool) => ({ type: DRAGPROGRESSBAR, payload: bool });
 export const setVolume = (percent) => ({ type: VOLUME, payload: percent });
+export const setProgress = (percent) => ({ type: PROGRESS, payload: percent });
 export const setMute = (bool) => ({ type: VOLUME, payload: bool });
 export const setCurrentTime = (time) => ({ type: CURRENT_TIME, payload: time });
 export const setDuration = (time) => ({ type: DURATION, payload: time });
@@ -38,7 +42,9 @@ const initialState = {
   ready: false,
   loading: false,
   drag: false,
+  dragProgress: false,
   volume: 50,
+  progress: 0,
   mute: false,
   currentTime: 0,
   duration: 0,
@@ -64,8 +70,12 @@ function player(state = initialState, action) {
       return { ...state, playing: false };
     case DRAGVOLUME:
       return { ...state, drag: action.payload };
+    case DRAGPROGRESSBAR:
+      return { ...state, dragProgress: action.payload };
     case VOLUME:
       return { ...state, volume: action.payload };
+    case PROGRESS:
+      return { ...state, progress: action.payload };
     case MUTE:
       return { ...state, mute: action.payload };
     case CURRENT_TIME:
