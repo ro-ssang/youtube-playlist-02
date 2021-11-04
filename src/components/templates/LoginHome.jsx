@@ -46,6 +46,7 @@ function LoginHome({
   loadingPopularVideos,
   popularVideos,
   getPopularVideos,
+  loadPlayer,
 }) {
   useEffect(() => {
     getPopularVideos();
@@ -97,7 +98,9 @@ function LoginHome({
                       },
                     },
                   } = video;
-                  return <VideoItem key={id} title={title} thumbnail={thumbnail} rank={index + 1} />;
+                  return (
+                    <VideoItem key={id} title={title} thumbnail={thumbnail} rank={index + 1} loadPlayer={loadPlayer} />
+                  );
                 })}
               </VideoList>
             </>

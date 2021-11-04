@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Up } from '../../assets/icons/up.svg';
 import { ReactComponent as Loop } from '../../assets/icons/loop.svg';
@@ -90,10 +90,15 @@ const Circle = styled.div`
   user-select: none;
 `;
 
-function PlayerLeftBox() {
+function PlayerLeftBox({ togglePlayer }) {
+  const onToggle = useCallback(() => {
+    console.log('toggled');
+    togglePlayer();
+  }, [togglePlayer]);
+
   return (
     <Container>
-      <IconContainer>
+      <IconContainer onClick={onToggle}>
         <UpIcon />
       </IconContainer>
       <IconContainer>

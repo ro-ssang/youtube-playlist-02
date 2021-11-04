@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import VideoRank from '../atoms/VideoRank';
 import VideoTitle from '../atoms/VideoTitle';
@@ -30,9 +30,14 @@ const AddListIcon = styled(AddList)`
   z-index: 2;
 `;
 
-function VideoItem({ title, thumbnail, rank }) {
+function VideoItem({ title, thumbnail, rank, loadPlayer }) {
+  const onLoadingVideo = useCallback(() => {
+    console.log('Clicked Loading Video');
+    loadPlayer();
+  }, [loadPlayer]);
+
   return (
-    <Container>
+    <Container onClick={onLoadingVideo}>
       <ThumbnailContainer>
         <Thumbnail src={thumbnail} alt={title} />
       </ThumbnailContainer>

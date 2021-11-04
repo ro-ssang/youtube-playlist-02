@@ -11,8 +11,9 @@ import PlayList from './components/pages/PlayList';
 import Search from './components/pages/Search';
 import { LS_TOKEN } from './contants';
 import { login } from './store/auth';
+import { togglePlayer } from './store/player';
 
-function App({ isLogin, login }) {
+function App({ isLogin, login, isToggle, loadingPlayer, togglePlayer }) {
   useEffect(() => {
     if (localStorage.getItem(LS_TOKEN)) {
       login();
@@ -26,10 +27,10 @@ function App({ isLogin, login }) {
         <Route path="/" exact component={Home} />
         <Route path="/playlist/:playlistId" component={PlayList} />
         <Route path="/search" component={Search} />
-        {isLogin && (
+        {isLogin && loadingPlayer && (
           <>
-            <PlayerBar />
-            <Video />
+            <PlayerBar togglePlayer={togglePlayer} />
+            <Video isToggle={isToggle} />
           </>
         )}
       </Router>
@@ -38,8 +39,10 @@ function App({ isLogin, login }) {
 }
 
 export default connect(
-  ({ auth }) => ({
+  ({ auth, player }) => ({
     isLogin: auth.isLogin,
+    isToggle: player.toggle,
+    loadingPlayer: player.loading,
   }),
-  { login }
+  { login, togglePlayer }
 )(App);

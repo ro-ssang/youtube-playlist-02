@@ -9,8 +9,7 @@ const Container = styled.div`
   position: fixed;
   bottom: 0px;
   right: 0px;
-  /* display: flex; */
-  display: none;
+  display: flex;
   -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: justify;
@@ -35,11 +34,11 @@ const Container = styled.div`
   }
 `;
 
-function PlayerBar() {
+function PlayerBar({ togglePlayer }) {
   return (
     <Container>
       <ProgressBar />
-      <PlayerLeftBox />
+      <PlayerLeftBox togglePlayer={togglePlayer} />
       <PlayerCenterBox
         thumbnailUrl="https://i.ytimg.com/vi/Kevp2lFKSOg/mqdefault.jpg"
         title="strawberry moon (strawberry moon)"
