@@ -11,9 +11,9 @@ import PlayList from './components/pages/PlayList';
 import Search from './components/pages/Search';
 import { LS_TOKEN } from './contants';
 import { login } from './store/auth';
-import { togglePlayer } from './store/player';
+import { togglePlayer, readyPlayer } from './store/player';
 
-function App({ isLogin, login, isToggle, loadingPlayer, togglePlayer }) {
+function App({ isLogin, login, videoInfo, isToggle, isRender, togglePlayer, readyPlayer, isReady }) {
   useEffect(() => {
     if (localStorage.getItem(LS_TOKEN)) {
       login();
@@ -27,10 +27,10 @@ function App({ isLogin, login, isToggle, loadingPlayer, togglePlayer }) {
         <Route path="/" exact component={Home} />
         <Route path="/playlist/:playlistId" component={PlayList} />
         <Route path="/search" component={Search} />
-        {isLogin && loadingPlayer && (
+        {isLogin && isRender && (
           <>
-            <PlayerBar togglePlayer={togglePlayer} />
-            <Video isToggle={isToggle} />
+            <PlayerBar videoInfo={videoInfo} togglePlayer={togglePlayer} />
+            <Video isToggle={isToggle} readyPlayer={readyPlayer} isReady={isReady} />
           </>
         )}
       </Router>
@@ -41,8 +41,10 @@ function App({ isLogin, login, isToggle, loadingPlayer, togglePlayer }) {
 export default connect(
   ({ auth, player }) => ({
     isLogin: auth.isLogin,
+    videoInfo: player.videoInfo,
     isToggle: player.toggle,
-    loadingPlayer: player.loading,
+    isReady: player.ready,
+    isRender: player.render,
   }),
-  { login, togglePlayer }
+  { login, togglePlayer, readyPlayer }
 )(App);

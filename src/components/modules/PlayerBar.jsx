@@ -34,17 +34,19 @@ const Container = styled.div`
   }
 `;
 
-function PlayerBar({ togglePlayer }) {
+function PlayerBar({ videoInfo, togglePlayer }) {
   return (
     <Container>
       <ProgressBar />
       <PlayerLeftBox togglePlayer={togglePlayer} />
-      <PlayerCenterBox
-        thumbnailUrl="https://i.ytimg.com/vi/Kevp2lFKSOg/mqdefault.jpg"
-        title="strawberry moon (strawberry moon)"
-        artist="IU - Topic"
-        year="2021"
-      />
+      {videoInfo && (
+        <PlayerCenterBox
+          thumbnailUrl={videoInfo.thumbnail}
+          title={videoInfo.title}
+          artist={videoInfo.channelTitle}
+          year={videoInfo.publishedAt.substring(0, 4)}
+        />
+      )}
       <PlayerRightBox />
     </Container>
   );

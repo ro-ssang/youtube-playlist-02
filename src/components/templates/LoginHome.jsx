@@ -46,7 +46,8 @@ function LoginHome({
   loadingPopularVideos,
   popularVideos,
   getPopularVideos,
-  loadPlayer,
+  renderPlayer,
+  setVideoInfo,
 }) {
   useEffect(() => {
     getPopularVideos();
@@ -93,13 +94,25 @@ function LoginHome({
                     id,
                     snippet: {
                       title,
+                      channelTitle,
                       thumbnails: {
                         medium: { url: thumbnail },
                       },
+                      publishedAt,
                     },
                   } = video;
                   return (
-                    <VideoItem key={id} title={title} thumbnail={thumbnail} rank={index + 1} loadPlayer={loadPlayer} />
+                    <VideoItem
+                      key={id}
+                      id={id}
+                      title={title}
+                      channelTitle={channelTitle}
+                      thumbnail={thumbnail}
+                      publishedAt={publishedAt}
+                      rank={index + 1}
+                      renderPlayer={renderPlayer}
+                      setVideoInfo={setVideoInfo}
+                    />
                   );
                 })}
               </VideoList>

@@ -43,20 +43,24 @@ function loadVideo() {
   });
 }
 
-function Video({ isToggle }) {
+function Video({ isToggle, readyPlayer, isReady }) {
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
 
-      window.onYouTubeIframeAPIReady = loadVideo;
+      window.onYouTubeIframeAPIReady = readyPlayer;
 
       const firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    } else {
+    }
+  }, [readyPlayer]);
+
+  useEffect(() => {
+    if (isReady) {
       loadVideo();
     }
-  }, []);
+  }, [isReady]);
 
   return (
     <Container isToggle={isToggle}>

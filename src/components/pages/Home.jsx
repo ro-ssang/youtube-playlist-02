@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import LoginHome from '../templates/LoginHome';
 import LogoutHome from '../templates/LogoutHome';
 import { login, logout } from '../../store/auth';
-import { loadPlayer } from '../../store/player';
+import { renderPlayer, setVideoInfo } from '../../store/player';
 import { setProfile, getPlaylists } from '../../store/user';
 import { getPopularVideos } from '../../store/videos';
 
@@ -19,7 +19,8 @@ function Home({
   loadingPopularVideos,
   popularVideos,
   getPopularVideos,
-  loadPlayer,
+  renderPlayer,
+  setVideoInfo,
 }) {
   return isLogin ? (
     <LoginHome
@@ -32,7 +33,8 @@ function Home({
       loadingPopularVideos={loadingPopularVideos}
       popularVideos={popularVideos}
       getPopularVideos={getPopularVideos}
-      loadPlayer={loadPlayer}
+      renderPlayer={renderPlayer}
+      setVideoInfo={setVideoInfo}
     />
   ) : (
     <LogoutHome login={login} />
@@ -54,6 +56,7 @@ export default connect(
     setProfile,
     getPlaylists,
     getPopularVideos,
-    loadPlayer,
+    renderPlayer,
+    setVideoInfo,
   }
 )(Home);

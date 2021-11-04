@@ -30,11 +30,12 @@ const AddListIcon = styled(AddList)`
   z-index: 2;
 `;
 
-function VideoItem({ title, thumbnail, rank, loadPlayer }) {
+function VideoItem({ id, title, channelTitle, thumbnail, publishedAt, rank, renderPlayer, setVideoInfo }) {
   const onLoadingVideo = useCallback(() => {
     console.log('Clicked Loading Video');
-    loadPlayer();
-  }, [loadPlayer]);
+    renderPlayer();
+    setVideoInfo(id, title, channelTitle, thumbnail, publishedAt);
+  }, [renderPlayer, setVideoInfo, id, title, channelTitle, thumbnail, publishedAt]);
 
   return (
     <Container onClick={onLoadingVideo}>
