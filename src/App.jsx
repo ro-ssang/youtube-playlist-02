@@ -11,9 +11,23 @@ import PlayList from './components/pages/PlayList';
 import Search from './components/pages/Search';
 import { LS_TOKEN } from './contants';
 import { login } from './store/auth';
-import { togglePlayer, readyPlayer, setPlayer } from './store/player';
+import { togglePlayer, readyPlayer, setPlayer, playPlayer, puasePlayer } from './store/player';
 
-function App({ isLogin, login, videoInfo, isToggle, isRender, togglePlayer, readyPlayer, isReady, player, setPlayer }) {
+function App({
+  isLogin,
+  login,
+  videoInfo,
+  isToggle,
+  isRender,
+  togglePlayer,
+  readyPlayer,
+  isReady,
+  player,
+  setPlayer,
+  playing,
+  playPlayer,
+  puasePlayer,
+}) {
   useEffect(() => {
     if (localStorage.getItem(LS_TOKEN)) {
       login();
@@ -29,7 +43,14 @@ function App({ isLogin, login, videoInfo, isToggle, isRender, togglePlayer, read
         <Route path="/search" component={Search} />
         {isLogin && isRender && (
           <>
-            <PlayerBar videoInfo={videoInfo} togglePlayer={togglePlayer} />
+            <PlayerBar
+              videoInfo={videoInfo}
+              togglePlayer={togglePlayer}
+              player={player}
+              playing={playing}
+              playPlayer={playPlayer}
+              puasePlayer={puasePlayer}
+            />
             <Video
               videoInfo={videoInfo}
               isToggle={isToggle}
@@ -37,6 +58,8 @@ function App({ isLogin, login, videoInfo, isToggle, isRender, togglePlayer, read
               isReady={isReady}
               player={player}
               setPlayer={setPlayer}
+              playPlayer={playPlayer}
+              puasePlayer={puasePlayer}
             />
           </>
         )}
@@ -49,10 +72,11 @@ export default connect(
   ({ auth, player }) => ({
     isLogin: auth.isLogin,
     player: player.player,
+    playing: player.playing,
     videoInfo: player.videoInfo,
     isToggle: player.toggle,
     isReady: player.ready,
     isRender: player.render,
   }),
-  { login, togglePlayer, readyPlayer, setPlayer }
+  { login, togglePlayer, readyPlayer, setPlayer, playPlayer, puasePlayer }
 )(App);

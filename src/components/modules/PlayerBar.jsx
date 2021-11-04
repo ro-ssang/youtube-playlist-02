@@ -34,7 +34,7 @@ const Container = styled.div`
   }
 `;
 
-function PlayerBar({ videoInfo, togglePlayer }) {
+function PlayerBar({ videoInfo, togglePlayer, player, playing, playPlayer, puasePlayer }) {
   return (
     <Container>
       <ProgressBar />
@@ -47,7 +47,7 @@ function PlayerBar({ videoInfo, togglePlayer }) {
           year={videoInfo.publishedAt.substring(0, 4)}
         />
       )}
-      <PlayerRightBox />
+      <PlayerRightBox player={player} playing={playing} playPlayer={playPlayer} puasePlayer={puasePlayer} />
     </Container>
   );
 }

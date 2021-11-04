@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
+import { ReactComponent as Pause } from '../../assets/icons/pause.svg';
 import { ReactComponent as Prev } from '../../assets/icons/prev.svg';
 import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { ReactComponent as Next } from '../../assets/icons/next.svg';
@@ -27,6 +28,12 @@ const IconContainer = styled.div`
   margin: 0px 0.5rem 0px 0px;
   fill: ${({ theme }) => theme.colors.theme.default};
 `;
+const PauseIcon = styled(Pause)`
+  display: block;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+`;
 const PrevIcon = styled(Prev)`
   display: block;
   width: 24px;
@@ -46,16 +53,24 @@ const NextIcon = styled(Next)`
   cursor: pointer;
 `;
 
-function PlayerRightBox() {
+function PlayerRightBox({ player, playing, playPlayer, puasePlayer }) {
+  const onTogglePlay = useCallback(() => {
+    if (playing) {
+      player.pauseVideo();
+      puasePlayer();
+    } else {
+      player.playVideo();
+      playPlayer();
+    }
+  }, [player, playing, playPlayer, puasePlayer]);
+
   return (
     <Container>
       <TimeLapse>0:00 / 3:25</TimeLapse>
       <IconContainer>
         <PrevIcon />
       </IconContainer>
-      <IconContainer>
-        <PlayIcon />
-      </IconContainer>
+      <IconContainer onClick={onTogglePlay}>{playing ? <PauseIcon /> : <PlayIcon />}</IconContainer>
       <IconContainer>
         <NextIcon />
       </IconContainer>

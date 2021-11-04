@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
 const Container = styled.div`
@@ -35,10 +35,14 @@ const YoutubePlayer = styled.div`
   }
 `;
 
-function loadVideo(videoId, setPlayer) {
+function loadVideo(videoId, setPlayer, stateChange) {
   const player = new window.YT.Player('player', {
     height: '360',
     width: '640',
+    videoId,
+    events: {
+      onStateChange: stateChange,
+    },
   });
   setTimeout(() => setPlayer(player), 1000);
 }
@@ -47,7 +51,18 @@ function changeVideo(videoId, player) {
   player.loadVideoById(videoId);
 }
 
-function Video({ videoInfo, isToggle, readyPlayer, isReady, player, setPlayer }) {
+function Video({ videoInfo, isToggle, readyPlayer, isReady, player, setPlayer, playPlayer, puasePlayer }) {
+  const stateChange = useCallback(
+    (event) => {
+      if (event.data === 1) {
+        playPlayer();
+      } else if (event.data === 2) {
+        puasePlayer();
+      }
+    },
+    [playPlayer, puasePlayer]
+  );
+
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement('script');
@@ -62,12 +77,12 @@ function Video({ videoInfo, isToggle, readyPlayer, isReady, player, setPlayer })
 
   useEffect(() => {
     if (isReady && !player) {
-      loadVideo(videoInfo.id, setPlayer);
+      loadVideo(videoInfo.id, setPlayer, stateChange);
     }
     if (player) {
       changeVideo(videoInfo.id, player);
     }
-  }, [isReady, videoInfo, setPlayer, player]);
+  }, [isReady, videoInfo, setPlayer, player, stateChange]);
 
   return (
     <Container isToggle={isToggle}>
