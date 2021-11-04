@@ -35,15 +35,19 @@ const YoutubePlayer = styled.div`
   }
 `;
 
-function loadVideo() {
-  new window.YT.Player('player', {
+function loadVideo(videoId, setPlayer) {
+  const player = new window.YT.Player('player', {
     height: '360',
     width: '640',
-    videoId: 'M7lc1UVf-VE',
   });
+  setTimeout(() => setPlayer(player), 1000);
 }
 
-function Video({ isToggle, readyPlayer, isReady }) {
+function changeVideo(videoId, player) {
+  player.loadVideoById(videoId);
+}
+
+function Video({ videoInfo, isToggle, readyPlayer, isReady, player, setPlayer }) {
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement('script');
@@ -57,10 +61,13 @@ function Video({ isToggle, readyPlayer, isReady }) {
   }, [readyPlayer]);
 
   useEffect(() => {
-    if (isReady) {
-      loadVideo();
+    if (isReady && !player) {
+      loadVideo(videoInfo.id, setPlayer);
     }
-  }, [isReady]);
+    if (player) {
+      changeVideo(videoInfo.id, player);
+    }
+  }, [isReady, videoInfo, setPlayer, player]);
 
   return (
     <Container isToggle={isToggle}>

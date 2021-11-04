@@ -60,7 +60,9 @@ function LogoutHome({ login }) {
           <SiteLogo isAside={false} />
           <SectionTitle>매일 새로운 음악을 발견해 보세요.</SectionTitle>
           <SectionDesc>플레이리스트 및 인기 아티스트들의 음악을 탐색하거나 검색할수 있습니다.</SectionDesc>
-          <LoginButton width="210px">Sign in With Google</LoginButton>
+          <LoginButton width="210px" login={login}>
+            Sign in With Google
+          </LoginButton>
           <ImageContainer>
             <Image
               src="	https://music.apple.com/assets/cwc/upsells/listen-now/web/en-us/medium.png"
