@@ -3,6 +3,7 @@ import GoogleLogin from 'react-google-login';
 import styled from 'styled-components';
 import { ReactComponent as Google } from '../../assets/icons/google.svg';
 import { CLIENT_ID, LS_PROFILE, LS_TOKEN } from '../../contants';
+import { refreshTokenSetup } from '../../lib/refreshToken';
 
 const Container = styled.div`
   display: inline-flex;
@@ -25,6 +26,7 @@ function LoginButton({ children, width, login }) {
   const onSuccess = useCallback(
     (res) => {
       console.log('[Login Success]', res);
+      refreshTokenSetup(res);
       localStorage.setItem(LS_PROFILE, JSON.stringify(res.profileObj));
       localStorage.setItem(LS_TOKEN, res.accessToken);
       login && login();
