@@ -1,9 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Up } from '../../assets/icons/up.svg';
 import { ReactComponent as Loop } from '../../assets/icons/loop.svg';
+import { ReactComponent as Mute } from '../../assets/icons/mute.svg';
 import { ReactComponent as Shuffle } from '../../assets/icons/shuffle.svg';
 import { ReactComponent as Volume } from '../../assets/icons/volume.svg';
+import { LS_VOLUME, SIDE_BAR_WIDTH } from '../../contants';
 
 const Container = styled.div`
   height: 100%;
@@ -42,6 +44,12 @@ const ShuffleIcon = styled(Shuffle)`
   height: 24px;
   cursor: pointer;
 `;
+const MuteIcon = styled(Mute)`
+  display: block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+`;
 const VolumeIcon = styled(Volume)`
   display: block;
   width: 24px;
@@ -75,12 +83,12 @@ const RedBar = styled.div`
   top: 0px;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.red};
-  width: 64.0625%;
+  width: ${({ volume }) => volume + '%'};
 `;
 const Circle = styled.div`
   position: absolute;
   top: 50%;
-  left: 64.0625%;
+  left: ${({ volume }) => volume + '%'};
   transform: translate(-50%, -50%);
   width: 12px;
   height: 12px;
@@ -90,11 +98,95 @@ const Circle = styled.div`
   user-select: none;
 `;
 
-function PlayerLeftBox({ togglePlayer }) {
+function calculateVolume(offsetLeft, clientWidth, clientX, vol) {
+  let percent;
+
+  if (vol) {
+    percent = vol;
+  } else {
+    percent = ((clientX - offsetLeft - SIDE_BAR_WIDTH) / clientWidth) * 100;
+  }
+
+  if (percent < 0) {
+    percent = 0;
+  }
+  if (percent > 100) {
+    percent = 100;
+  }
+
+  return percent;
+}
+
+function PlayerLeftBox({ player, togglePlayer, drag, dragVolume, volume, setVolume, mute, setMute }) {
+  const volumeCont = useRef();
+
   const onToggle = useCallback(() => {
-    console.log('toggled');
     togglePlayer();
   }, [togglePlayer]);
+
+  const onMute = useCallback(() => {
+    if (player) {
+      if (player.isMuted()) {
+        player.unMute();
+        setMute(false);
+        setVolume(localStorage.getItem(LS_VOLUME));
+      } else {
+        player.mute();
+        setMute(true);
+        setVolume(0);
+      }
+    }
+  }, [player, setMute, setVolume]);
+
+  const clickVolumeBar = useCallback(
+    (event) => {
+      const offsetLeft = volumeCont.current.offsetLeft;
+      const clientWidth = volumeCont.current.clientWidth;
+      const clientX = event.clientX;
+      dragVolume(true);
+      const percent = calculateVolume(offsetLeft, clientWidth, clientX);
+      setVolume(percent);
+      player.setVolume(percent);
+      localStorage.setItem(LS_VOLUME, percent);
+    },
+    [dragVolume, setVolume, player]
+  );
+
+  const pullVolumeBar = useCallback(() => {
+    dragVolume(false);
+  }, [dragVolume]);
+
+  const dragMouse = useCallback(
+    (event) => {
+      if (drag) {
+        const offsetLeft = volumeCont.current.offsetLeft;
+        const clientWidth = volumeCont.current.clientWidth;
+        const clientX = event.clientX;
+        const percent = calculateVolume(offsetLeft, clientWidth, clientX);
+        if (percent > 0 && mute) {
+          player.unMute();
+          setMute(false);
+        }
+        setVolume(percent);
+        player.setVolume(percent);
+        localStorage.setItem(LS_VOLUME, percent);
+      }
+    },
+    [drag, setVolume, player, mute, setMute]
+  );
+
+  useEffect(() => {
+    document.addEventListener('mouseup', pullVolumeBar);
+    document.addEventListener('mousemove', dragMouse);
+    return () => {
+      document.removeEventListener('mouseup', pullVolumeBar);
+      document.removeEventListener('mousemove', dragMouse);
+    };
+  }, [pullVolumeBar, dragMouse]);
+
+  useEffect(() => {
+    localStorage.setItem(LS_VOLUME, 50);
+  }, [setVolume]);
 
   return (
     <Container>
@@ -107,17 +199,15 @@ function PlayerLeftBox({ togglePlayer }) {
       <IconContainer>
         <ShuffleIcon />
       </IconContainer>
-      <IconContainer>
-        <VolumeIcon />
-      </IconContainer>
-      <VolumeBar>
+      <IconContainer onClick={onMute}>{volume !== 0 && !mute ? <VolumeIcon /> : <MuteIcon />}</IconContainer>
+      <VolumeBar ref={volumeCont} onMouseDown={clickVolumeBar}>
         <BarContainer>
           <BarWrapper>
             <GrayBar />
-            <RedBar />
+            <RedBar volume={volume} />
           </BarWrapper>
         </BarContainer>
-        <Circle />
+        <Circle volume={volume} />
       </VolumeBar>
     </Container>
   );

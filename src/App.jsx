@@ -11,7 +11,16 @@ import PlayList from './components/pages/PlayList';
 import Search from './components/pages/Search';
 import { LS_TOKEN } from './contants';
 import { login } from './store/auth';
-import { togglePlayer, readyPlayer, setPlayer, playPlayer, puasePlayer } from './store/player';
+import {
+  togglePlayer,
+  readyPlayer,
+  setPlayer,
+  playPlayer,
+  puasePlayer,
+  dragVolume,
+  setVolume,
+  setMute,
+} from './store/player';
 
 function App({
   isLogin,
@@ -27,6 +36,12 @@ function App({
   playing,
   playPlayer,
   puasePlayer,
+  drag,
+  dragVolume,
+  volume,
+  setVolume,
+  mute,
+  setMute,
 }) {
   useEffect(() => {
     if (localStorage.getItem(LS_TOKEN)) {
@@ -50,6 +65,12 @@ function App({
               playing={playing}
               playPlayer={playPlayer}
               puasePlayer={puasePlayer}
+              drag={drag}
+              dragVolume={dragVolume}
+              volume={volume}
+              setVolume={setVolume}
+              mute={mute}
+              setMute={setMute}
             />
             <Video
               videoInfo={videoInfo}
@@ -77,6 +98,9 @@ export default connect(
     isToggle: player.toggle,
     isReady: player.ready,
     isRender: player.render,
+    drag: player.drag,
+    volume: player.volume,
+    mute: player.mute,
   }),
-  { login, togglePlayer, readyPlayer, setPlayer, playPlayer, puasePlayer }
+  { login, togglePlayer, readyPlayer, setPlayer, playPlayer, puasePlayer, dragVolume, setVolume, setMute }
 )(App);

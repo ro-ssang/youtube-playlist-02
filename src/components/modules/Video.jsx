@@ -56,7 +56,7 @@ function Video({ videoInfo, isToggle, readyPlayer, isReady, player, setPlayer, p
     (event) => {
       if (event.data === 1) {
         playPlayer();
-      } else if (event.data === 2) {
+      } else if (event.data === 0 || event.data === 2) {
         puasePlayer();
       }
     },

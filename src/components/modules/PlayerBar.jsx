@@ -34,11 +34,33 @@ const Container = styled.div`
   }
 `;
 
-function PlayerBar({ videoInfo, togglePlayer, player, playing, playPlayer, puasePlayer }) {
+function PlayerBar({
+  videoInfo,
+  togglePlayer,
+  player,
+  playing,
+  playPlayer,
+  puasePlayer,
+  drag,
+  dragVolume,
+  volume,
+  setVolume,
+  mute,
+  setMute,
+}) {
   return (
     <Container>
       <ProgressBar />
-      <PlayerLeftBox togglePlayer={togglePlayer} />
+      <PlayerLeftBox
+        player={player}
+        togglePlayer={togglePlayer}
+        drag={drag}
+        dragVolume={dragVolume}
+        volume={volume}
+        setVolume={setVolume}
+        mute={mute}
+        setMute={setMute}
+      />
       {videoInfo && (
         <PlayerCenterBox
           thumbnailUrl={videoInfo.thumbnail}
