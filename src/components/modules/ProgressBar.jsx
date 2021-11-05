@@ -76,7 +76,6 @@ function ProgressBar({
 
   const onMouseDownProgress = useCallback(
     (event) => {
-      console.log('mouse down');
       const clientX = event.clientX;
       const width = progressBarCont.current.clientWidth;
       const offsetLeft = progressBarCont.current.offsetLeft;
@@ -95,7 +94,6 @@ function ProgressBar({
   const onMouseMove = useCallback(
     (event) => {
       if (dragProgress) {
-        console.log('mouse move');
         const clientX = event.clientX;
         const width = progressBarCont.current.clientWidth;
         const offsetLeft = progressBarCont.current.offsetLeft;
@@ -112,7 +110,6 @@ function ProgressBar({
   );
 
   const onMouseUp = useCallback(() => {
-    console.log('mouse up');
     dragProgressBar(false);
   }, [dragProgressBar]);
 

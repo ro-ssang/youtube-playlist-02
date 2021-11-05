@@ -1,9 +1,22 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PlayerCenterBox from './PlayerCenterBox';
 import PlayerLeftBox, { BarWrapper as VolumeBarWrapper } from './PlayerLeftBox';
 import PlayerRightBox from './PlayerRightBox';
 import ProgressBar, { BarWrapper, CircleContainer } from './ProgressBar';
+import {
+  togglePlayer,
+  playPlayer,
+  puasePlayer,
+  dragVolume,
+  dragProgressBar,
+  setVolume,
+  setMute,
+  setCurrentTime,
+  setDuration,
+  setProgress,
+} from '../../store/player';
 
 const Container = styled.div`
   position: fixed;
@@ -101,4 +114,29 @@ function PlayerBar({
   );
 }
 
-export default PlayerBar;
+export default connect(
+  ({ player }) => ({
+    videoInfo: player.videoInfo,
+    player: player.player,
+    playing: player.playing,
+    drag: player.drag,
+    volume: player.volume,
+    mute: player.mute,
+    currentTime: player.currentTime,
+    duration: player.duration,
+    dragProgress: player.dragProgress,
+    progress: player.progress,
+  }),
+  {
+    togglePlayer,
+    playPlayer,
+    puasePlayer,
+    dragVolume,
+    setVolume,
+    setMute,
+    setCurrentTime,
+    setDuration,
+    dragProgressBar,
+    setProgress,
+  }
+)(PlayerBar);

@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
+import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
+import { readyPlayer, setPlayer, playPlayer, puasePlayer } from '../../store/player';
 
 const Container = styled.div`
   ${({ theme, isToggle }) => {
@@ -93,4 +95,17 @@ function Video({ videoInfo, isToggle, readyPlayer, isReady, player, setPlayer, p
   );
 }
 
-export default Video;
+export default connect(
+  ({ player }) => ({
+    videoInfo: player.videoInfo,
+    isReady: player.ready,
+    player: player.player,
+    isToggle: player.toggle,
+  }),
+  {
+    readyPlayer,
+    setPlayer,
+    playPlayer,
+    puasePlayer,
+  }
+)(Video);
