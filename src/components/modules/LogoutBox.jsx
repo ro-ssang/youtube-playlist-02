@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { GoogleLogout } from 'react-google-login';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { CLIENT_ID, LS_PROFILE } from '../../contants';
 import Avatar from '../atoms/Avatar';
+import { logout } from '../../store/auth';
+import { setProfile } from '../../store/user';
 
 const Username = styled.div`
   font-size: 0.8125rem;
@@ -14,7 +17,7 @@ const LogoutLink = styled(Link)`
   cursor: pointer;
 `;
 
-function LogoutBox({ profile, setProfile, logoutPath, logout }) {
+function LogoutBox({ profile, setProfile, logout }) {
   useEffect(() => {
     const { name, imageUrl } = JSON.parse(localStorage.getItem(LS_PROFILE));
     setProfile(name, imageUrl);
@@ -35,7 +38,7 @@ function LogoutBox({ profile, setProfile, logoutPath, logout }) {
           <Avatar avatarUrl={profile.avatarUrl} />
           <div>
             <Username>{profile.name}</Username>
-            <LogoutLink to={logoutPath} onClick={renderProps.onClick} disabled={renderProps.disabled}>
+            <LogoutLink to="/" onClick={renderProps.onClick} disabled={renderProps.disabled}>
               로그아웃
             </LogoutLink>
           </div>
@@ -46,4 +49,12 @@ function LogoutBox({ profile, setProfile, logoutPath, logout }) {
   );
 }
 
-export default LogoutBox;
+export default connect(
+  ({ user }) => ({
+    profile: user.profile,
+  }),
+  {
+    logout,
+    setProfile,
+  }
+)(LogoutBox);

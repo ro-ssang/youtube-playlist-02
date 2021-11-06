@@ -12,9 +12,13 @@ import SearchForm from '../modules/SearchForm';
 import LogoutBox from '../modules/LogoutBox';
 import Loader from '../atoms/Loader';
 import { connect } from 'react-redux';
-import { logout } from '../../store/auth';
-import { setProfile, getPlaylists } from '../../store/user';
+import { login } from '../../store/auth';
+import { getPlaylists } from '../../store/user';
 import { getPopularVideos } from '../../store/videos';
+import PlayerBar from '../modules/PlayerBar';
+import Video from '../modules/Video';
+import { LS_TOKEN } from '../../contants';
+import LoginButton from '../atoms/LoginButton';
 
 const Wrapper = styled.div`
   display: grid;
@@ -30,20 +34,20 @@ const Nav = styled.nav`
 const BrowseList = styled.ul``;
 const PlayList = styled.ul``;
 
-function LoggedInLayout({
-  children,
-  logout,
-  profile,
-  setProfile,
-  getPlaylists,
-  loadingPlaylists,
-  playlists,
-  getPopularVideos,
-}) {
+function LoggedInLayout({ children, isLogin, login, getPlaylists, loadingPlaylists, playlists }) {
+  // // 로그인시 토큰 설정
   useEffect(() => {
-    getPopularVideos();
-    getPlaylists();
-  }, [getPopularVideos, getPlaylists]);
+    if (localStorage.getItem(LS_TOKEN)) {
+      login();
+    }
+  }, [login]);
+
+  // // 로그인시 플레이리스트 가져오기
+  useEffect(() => {
+    if (isLogin) {
+      getPlaylists();
+    }
+  }, [isLogin, getPlaylists]);
 
   return (
     <Wrapper>
@@ -57,8 +61,9 @@ function LoggedInLayout({
           <ListTitle>플레이리스트</ListTitle>
           <PlayList>
             <AddPlayItem />
-            {loadingPlaylists && <Loader />}
-            {!loadingPlaylists &&
+            {isLogin && loadingPlaylists && <Loader />}
+            {isLogin &&
+              !loadingPlaylists &&
               playlists &&
               playlists.map((item) => {
                 const {
@@ -70,23 +75,31 @@ function LoggedInLayout({
           </PlayList>
         </Nav>
         <AuthBox>
-          <LogoutBox profile={profile} setProfile={setProfile} logoutPath="/" logout={logout} />
+          {!isLogin && <LoginButton />}
+          {isLogin && <LogoutBox />}
         </AuthBox>
       </Aside>
-      <Main>{children}</Main>
+      <Main>
+        {children}
+        {isLogin && (
+          <>
+            <PlayerBar />
+            <Video />
+          </>
+        )}
+      </Main>
     </Wrapper>
   );
 }
 
 export default connect(
-  ({ user }) => ({
-    profile: user.profile,
+  ({ auth, user }) => ({
+    isLogin: auth.isLogin,
     loadingPlaylists: user.loading.PLAYLISTS,
     playlists: user.playlists,
   }),
   {
-    logout,
-    setProfile,
+    login,
     getPlaylists,
     getPopularVideos,
   }

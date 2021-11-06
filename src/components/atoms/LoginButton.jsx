@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
 import GoogleLogin from 'react-google-login';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as Google } from '../../assets/icons/google.svg';
 import { CLIENT_ID, LS_PROFILE, LS_TOKEN } from '../../contants';
+import { login } from '../../store/auth';
 
 const Container = styled.div`
   display: inline-flex;
@@ -21,7 +23,7 @@ const GoogleIcon = styled(Google)`
 `;
 const Text = styled.span``;
 
-function LoginButton({ children, width, login }) {
+function LoginButton({ width, login }) {
   const onSuccess = useCallback(
     (res) => {
       console.log('[Login Success]', res);
@@ -42,7 +44,7 @@ function LoginButton({ children, width, login }) {
       render={(renderProps) => (
         <Container width={width} onClick={renderProps.onClick} disabled={renderProps.disabled}>
           <GoogleIcon />
-          <Text>{children}</Text>
+          <Text>Sign in With Google</Text>
         </Container>
       )}
       onSuccess={onSuccess}
@@ -53,4 +55,6 @@ function LoginButton({ children, width, login }) {
   );
 }
 
-export default LoginButton;
+export default connect(() => ({}), {
+  login,
+})(LoginButton);
