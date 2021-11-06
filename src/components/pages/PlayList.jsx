@@ -1,26 +1,17 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
-import LoginPlayList from '../templates/LoginPlayList';
-import { logout } from '../../store/auth';
-import { setProfile, getPlaylists, getPlayItems } from '../../store/user';
+import { getPlayItems } from '../../store/user';
 import { withRouter } from 'react-router';
+import PlayItemInfo from '../modules/PlayItemInfo';
+import Loader from '../atoms/Loader';
+import PlayItemTable from '../modules/PlayItemTable';
 
-function PlayList({
-  loadingPlaylists,
-  loadingPlayItems,
-  playlists,
-  getPlaylists,
-  profile,
-  setProfile,
-  playItems,
-  getPlayItems,
-  logout,
-  match,
-}) {
-  useEffect(() => {
-    getPlaylists();
-  }, [getPlaylists]);
+const Section = styled.section`
+  padding: 2.5rem;
+`;
 
+function PlayList({ loadingPlayItems, playItems, getPlayItems, match }) {
   useEffect(() => {
     const {
       params: { playlistId },
@@ -29,15 +20,11 @@ function PlayList({
   }, [getPlayItems, match]);
 
   return (
-    <LoginPlayList
-      loadingPlaylists={loadingPlaylists}
-      loadingPlayItems={loadingPlayItems}
-      playlists={playlists}
-      playItems={playItems}
-      profile={profile}
-      setProfile={setProfile}
-      logout={logout}
-    />
+    <Section>
+      <PlayItemInfo />
+      {loadingPlayItems && <Loader />}
+      {!loadingPlayItems && <PlayItemTable loadingPlayItems={loadingPlayItems} playItems={playItems} />}
+    </Section>
   );
 }
 
@@ -46,13 +33,9 @@ export default connect(
     profile: user.profile,
     loadingPlaylists: user.loading.PLAYLISTS,
     loadingPlayItems: user.loading.PLAYITEMS,
-    playlists: user.playlists,
     playItems: user.playItems,
   }),
   {
-    logout,
-    setProfile,
-    getPlaylists,
     getPlayItems,
   }
 )(withRouter(PlayList));
