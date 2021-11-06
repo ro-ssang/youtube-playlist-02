@@ -17,12 +17,12 @@ export function createIframeByVideoId(videoId) {
   });
 }
 
-export function createIframeByPlaylistId(playlistId) {
+export function createIframeByPlaylistId(playlistId, index = 0) {
   return new window.YT.Player('player', {
     height: '360',
     width: '640',
     events: {
-      onReady: (event) => event.target.loadPlaylist({ list: playlistId, listType: 'playlist' }),
+      onReady: (event) => event.target.loadPlaylist({ list: playlistId, listType: 'playlist', index }),
     },
   });
 }

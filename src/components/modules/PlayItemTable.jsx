@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
+import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
+import { setPlayer } from '../../store/player';
 import Th from '../atoms/Th';
 import Tr from '../atoms/Tr';
 
@@ -15,7 +19,23 @@ const TBody = styled.tbody`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
-function PlayItemTable({ playItems }) {
+function PlayItemTable({ match, playItems, player, setPlayer }) {
+  const onPlay = useCallback(
+    (index) => {
+      const {
+        params: { playlistId },
+      } = match;
+
+      if (!player) {
+        const iframe = createIframeByPlaylistId(playlistId, index);
+        setPlayer(iframe);
+      } else {
+        player.loadPlaylist({ list: playlistId, listType: 'playlist', index });
+      }
+    },
+    [match, player, setPlayer]
+  );
+
   return (
     <Container>
       <thead>
@@ -30,13 +50,22 @@ function PlayItemTable({ playItems }) {
       </thead>
       {playItems && (
         <TBody>
-          {playItems.map((item) => {
+          {playItems.map((item, index) => {
             const {
               id,
               snippet: { title, videoOwnerChannelTitle: artist },
             } = item;
             const thumbnailUrl = item.snippet.thumbnails.medium?.url;
-            return <Tr key={id} thumbnailUrl={thumbnailUrl} title={title} artist={artist} time="4:02" />;
+            return (
+              <Tr
+                key={id}
+                thumbnailUrl={thumbnailUrl}
+                title={title}
+                artist={artist}
+                time="4:02"
+                onPlay={() => onPlay(index)}
+              />
+            );
           })}
         </TBody>
       )}
@@ -44,4 +73,9 @@ function PlayItemTable({ playItems }) {
   );
 }
 
-export default PlayItemTable;
+export default connect(
+  ({ player }) => ({
+    player: player.player,
+  }),
+  { setPlayer }
+)(withRouter(PlayItemTable));

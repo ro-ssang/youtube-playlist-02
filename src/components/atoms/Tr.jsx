@@ -84,11 +84,11 @@ const EllipsisIcon = styled(Ellipsis)`
   cursor: pointer;
 `;
 
-function Tr({ thumbnailUrl, title, artist, time }) {
+function Tr({ thumbnailUrl, title, artist, time, onPlay }) {
   return (
     <Container>
       <Song>
-        <ThumbnailContainer>
+        <ThumbnailContainer onClick={onPlay}>
           <Thumbnail src={thumbnailUrl} alt="썸네일" />
           <IconContainer>
             <PlayIcon />
