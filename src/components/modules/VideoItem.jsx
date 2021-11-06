@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import VideoRank from '../atoms/VideoRank';
 import VideoTitle from '../atoms/VideoTitle';
 import { ReactComponent as AddList } from '../../assets/icons/addList.svg';
+import { createIframeByVideoId } from '../../lib/youtubePlayer';
+import { connect } from 'react-redux';
+import { setPlayer } from '../../store/player';
 
 const Container = styled.li`
   position: relative;
@@ -30,9 +33,18 @@ const AddListIcon = styled(AddList)`
   z-index: 2;
 `;
 
-function VideoItem({ title, thumbnail, rank }) {
+function VideoItem({ videoId, title, thumbnail, rank, player, setPlayer }) {
+  const onLoadVideo = useCallback(() => {
+    if (!player) {
+      const iframe = createIframeByVideoId(videoId);
+      setPlayer(iframe);
+    } else {
+      player.loadVideoById(videoId);
+    }
+  }, [videoId, player, setPlayer]);
+
   return (
-    <Container>
+    <Container onClick={onLoadVideo}>
       <ThumbnailContainer>
         <Thumbnail src={thumbnail} alt={title} />
       </ThumbnailContainer>
@@ -45,4 +57,11 @@ function VideoItem({ title, thumbnail, rank }) {
   );
 }
 
-export default VideoItem;
+export default connect(
+  ({ player }) => ({
+    player: player.player,
+  }),
+  {
+    setPlayer,
+  }
+)(VideoItem);

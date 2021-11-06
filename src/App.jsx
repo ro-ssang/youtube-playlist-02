@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import GlobalStyle from './assets/styles/GlobalStyle';
@@ -7,8 +7,13 @@ import Home from './components/pages/Home';
 import PlayList from './components/pages/PlayList';
 import Search from './components/pages/Search';
 import LoggedInLayout from './components/templates/LoggedInLayout';
+import { loadYoutubeIframeAPI } from './lib/youtubePlayer';
 
 function App() {
+  useEffect(() => {
+    loadYoutubeIframeAPI();
+  }, []);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <GlobalStyle />

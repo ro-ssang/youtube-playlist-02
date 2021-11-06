@@ -37,7 +37,7 @@ function LoginHome({ loadingPopularVideos, popularVideos, getPopularVideos }) {
                   },
                 },
               } = video;
-              return <VideoItem key={id} title={title} thumbnail={thumbnail} rank={index + 1} />;
+              return <VideoItem key={id} videoId={id} title={title} thumbnail={thumbnail} rank={index + 1} />;
             })}
           </VideoList>
         </>
