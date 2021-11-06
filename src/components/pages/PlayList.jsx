@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { getPlayItems } from '../../store/user';
+import { getPlayItems, getPlaylistDetail } from '../../store/user';
 import { withRouter } from 'react-router';
 import PlayItemInfo from '../modules/PlayItemInfo';
 import Loader from '../atoms/Loader';
@@ -11,31 +11,36 @@ const Section = styled.section`
   padding: 2.5rem;
 `;
 
-function PlayList({ loadingPlayItems, playItems, getPlayItems, match }) {
+function PlayList({ loadingPlaylists, loadingPlayItems, playItems, getPlayItems, match, getPlaylistDetail }) {
   useEffect(() => {
     const {
       params: { playlistId },
     } = match;
     getPlayItems(playlistId);
-  }, [getPlayItems, match]);
+    getPlaylistDetail(playlistId);
+  }, [getPlayItems, match, getPlaylistDetail]);
 
   return (
     <Section>
-      <PlayItemInfo />
-      {loadingPlayItems && <Loader />}
-      {!loadingPlayItems && <PlayItemTable loadingPlayItems={loadingPlayItems} playItems={playItems} />}
+      {loadingPlaylists && loadingPlayItems && <Loader />}
+      {!loadingPlaylists && !loadingPlayItems && (
+        <>
+          <PlayItemInfo />
+          <PlayItemTable playItems={playItems} />
+        </>
+      )}
     </Section>
   );
 }
 
 export default connect(
   ({ user }) => ({
-    profile: user.profile,
     loadingPlaylists: user.loading.PLAYLISTS,
     loadingPlayItems: user.loading.PLAYITEMS,
     playItems: user.playItems,
   }),
   {
     getPlayItems,
+    getPlaylistDetail,
   }
 )(withRouter(PlayList));

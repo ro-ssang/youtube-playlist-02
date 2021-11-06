@@ -15,7 +15,7 @@ const TBody = styled.tbody`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
-function PlayItemTable({ loadingPlayItems, playItems }) {
+function PlayItemTable({ playItems }) {
   return (
     <Container>
       <thead>
@@ -28,7 +28,7 @@ function PlayItemTable({ loadingPlayItems, playItems }) {
           <Th width="10%">시간</Th>
         </tr>
       </thead>
-      {!loadingPlayItems && playItems && (
+      {playItems && (
         <TBody>
           {playItems.map((item) => {
             const {

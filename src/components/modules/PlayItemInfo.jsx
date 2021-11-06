@@ -5,6 +5,8 @@ import PlayListData from '../atoms/PlayListData';
 import { ReactComponent as Pen } from '../../assets/icons/pen.svg';
 import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { ReactComponent as TrashCan } from '../../assets/icons/trash-can.svg';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 const Container = styled.div`
   display: flex;
@@ -65,33 +67,48 @@ const PlayIcon = styled(Play)`
   margin-right: 0.25rem;
 `;
 
-function PlayItemInfo() {
+function PlayItemInfo({ match, playlistDetail }) {
   return (
     <Container>
-      <Thumbnail src="https://i.ytimg.com/vi/FtzvusgwigU/mqdefault.jpg" alt="썸네일" />
-      <MetaContainer>
-        <Title>요리</Title>
-        <PlayListData left="재생목록" right="유저이름" />
-        <PlayListData left="노래 4곡" right="15분" marginTop="0.25rem" marginBottom="1rem" />
-        <ActionContainer count="2">
-          <ActionButton>
-            <TrashCanIcon />
-            재생목록 삭제
-          </ActionButton>
-          <ActionButton>
-            <PenIcon />
-            재생목록 수정
-          </ActionButton>
-        </ActionContainer>
-        <ActionContainer count="1">
-          <ActionButton accent={true}>
-            <PlayIcon />
-            재생
-          </ActionButton>
-        </ActionContainer>
-      </MetaContainer>
+      {!playlistDetail && <div>재생목록이 존재하지 않습니다.</div>}
+      {playlistDetail && (
+        <>
+          <Thumbnail src={playlistDetail.url} alt="썸네일" />
+          <MetaContainer>
+            <Title>{playlistDetail.title}</Title>
+            <PlayListData left="재생목록" right={playlistDetail.channelTitle} />
+            <PlayListData
+              left={`노래 ${playlistDetail.itemCount}곡`}
+              right="15분"
+              marginTop="0.25rem"
+              marginBottom="1rem"
+            />
+            <ActionContainer count="2">
+              <ActionButton>
+                <TrashCanIcon />
+                재생목록 삭제
+              </ActionButton>
+              <ActionButton>
+                <PenIcon />
+                재생목록 수정
+              </ActionButton>
+            </ActionContainer>
+            <ActionContainer count="1">
+              <ActionButton accent={true}>
+                <PlayIcon />
+                재생
+              </ActionButton>
+            </ActionContainer>
+          </MetaContainer>
+        </>
+      )}
     </Container>
   );
 }
 
-export default PlayItemInfo;
+export default connect(
+  ({ user }) => ({
+    playlistDetail: user.playlistDetail,
+  }),
+  {}
+)(withRouter(PlayItemInfo));

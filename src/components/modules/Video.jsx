@@ -12,8 +12,10 @@ const Container = styled.div`
       align-items: center;
       -webkit-box-pack: center;
       justify-content: center;
-      width: ${`calc(100% - ${theme.sizes.sidebar.width} - ${theme.sizes.scrollBar.width})`};
+      /* width: ${`calc(100% - ${theme.sizes.sidebar.width} - ${theme.sizes.scrollBar.width})`}; */
       /* height: ${`calc(100vh - ${theme.sizes.playerBar.height})`}; */
+      margin-top: 50vh;
+      width: 50%;
       height: 50%;
       padding: 2.875rem 3.5rem 0px;
       background: rgb(10, 10, 10);

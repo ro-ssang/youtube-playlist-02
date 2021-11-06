@@ -29,6 +29,14 @@ export const playlistsApi = {
         access_token: localStorage.getItem(LS_TOKEN),
       },
     }),
+  getPlaylistDetail: (playlistId) =>
+    instance.get('/playlists', {
+      params: {
+        part: 'snippet,contentDetails',
+        id: playlistId,
+        access_token: localStorage.getItem(LS_TOKEN),
+      },
+    }),
 };
 
 export const playItemsApi = {
