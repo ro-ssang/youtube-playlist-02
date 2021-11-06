@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import ActionButton from '../atoms/ActionButton';
 import PlayListData from '../atoms/PlayListData';
@@ -7,6 +7,8 @@ import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { ReactComponent as TrashCan } from '../../assets/icons/trash-can.svg';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
+import { setPlayer } from '../../store/player';
 
 const Container = styled.div`
   display: flex;
@@ -67,7 +69,20 @@ const PlayIcon = styled(Play)`
   margin-right: 0.25rem;
 `;
 
-function PlayItemInfo({ match, playlistDetail }) {
+function PlayItemInfo({ match, playlistDetail, player, setPlayer }) {
+  const onPlay = useCallback(() => {
+    const {
+      params: { playlistId },
+    } = match;
+
+    if (!player) {
+      const iframe = createIframeByPlaylistId(playlistId);
+      setPlayer(iframe);
+    } else {
+      player.loadPlaylist({ list: playlistId, listType: 'playlist' });
+    }
+  }, [match, player, setPlayer]);
+
   return (
     <Container>
       {!playlistDetail && <div>재생목록이 존재하지 않습니다.</div>}
@@ -94,7 +109,7 @@ function PlayItemInfo({ match, playlistDetail }) {
               </ActionButton>
             </ActionContainer>
             <ActionContainer count="1">
-              <ActionButton accent={true}>
+              <ActionButton accent={true} onClick={onPlay}>
                 <PlayIcon />
                 재생
               </ActionButton>
@@ -107,8 +122,9 @@ function PlayItemInfo({ match, playlistDetail }) {
 }
 
 export default connect(
-  ({ user }) => ({
+  ({ user, player }) => ({
     playlistDetail: user.playlistDetail,
+    player: player.player,
   }),
-  {}
+  { setPlayer }
 )(withRouter(PlayItemInfo));

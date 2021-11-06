@@ -11,15 +11,18 @@ export function createIframeByVideoId(videoId) {
     height: '360',
     width: '640',
     videoId,
+    events: {
+      onReady: (event) => event.target.playVideo(),
+    },
   });
 }
 
 export function createIframeByPlaylistId(playlistId) {
-  const player = new window.YT.Player('player', {
+  return new window.YT.Player('player', {
     height: '360',
     width: '640',
+    events: {
+      onReady: (event) => event.target.loadPlaylist({ list: playlistId, listType: 'playlist' }),
+    },
   });
-  player.loadPlaylist({ list: playlistId, listType: 'playlist' });
-
-  return player;
 }

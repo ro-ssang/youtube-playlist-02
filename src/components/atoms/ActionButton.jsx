@@ -20,9 +20,9 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-function ActionButton({ children, accent }) {
+function ActionButton({ children, accent, onClick }) {
   return (
-    <Container>
+    <Container onClick={onClick}>
       <Button accent={accent}>{children}</Button>
     </Container>
   );
