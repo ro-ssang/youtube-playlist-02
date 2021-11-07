@@ -19,6 +19,7 @@ import PlayerBar from '../modules/PlayerBar';
 import Video from '../modules/Video';
 import { LS_TOKEN } from '../../contants';
 import LoginButton from '../atoms/LoginButton';
+import AddPlaylistModal from '../modules/AddPlaylistModal';
 
 const Wrapper = styled.div`
   display: grid;
@@ -88,6 +89,7 @@ function LoggedInLayout({ children, isLogin, login, getPlaylists, loadingPlaylis
           </>
         )}
       </Main>
+      <AddPlaylistModal />
     </Wrapper>
   );
 }
