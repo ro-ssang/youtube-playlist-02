@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
+import { changeAddingTitle, changeAddingDescription, postAddPlaylist } from '../../store/modal';
 
 const Container = styled.div`
   position: fixed;
@@ -87,7 +90,39 @@ const Backdrop = styled.div`
   z-index: 101;
 `;
 
-function AddPlaylistModal() {
+function AddPlaylistModal({
+  history,
+  addingTitle,
+  addingDescription,
+  changeAddingTitle,
+  changeAddingDescription,
+  postAddPlaylist,
+}) {
+  const onChnageTitle = useCallback(
+    (e) => {
+      changeAddingTitle(e.target.value);
+    },
+    [changeAddingTitle]
+  );
+
+  const onChnageDescription = useCallback(
+    (e) => {
+      changeAddingDescription(e.target.value);
+    },
+    [changeAddingDescription]
+  );
+
+  const onClickCancel = useCallback(() => {
+    changeAddingTitle('');
+    changeAddingDescription('');
+  }, [changeAddingTitle, changeAddingDescription]);
+
+  const onClickSubmit = useCallback(() => {
+    postAddPlaylist(history);
+    changeAddingTitle('');
+    changeAddingDescription('');
+  }, [changeAddingTitle, changeAddingDescription, postAddPlaylist, history]);
+
   return (
     <>
       <Container>
@@ -99,23 +134,33 @@ function AddPlaylistModal() {
             <ModalInputLabel htmlFor="title" name="title" autocomplete="off">
               제목
             </ModalInputLabel>
-            <ModalInput id="title" />
+            <ModalInput id="title" onChange={onChnageTitle} value={addingTitle} />
           </ModalInputCont>
           <ModalInputCont>
             <ModalInputLabel htmlFor="description" name="description" autocomplete="off">
               설명
             </ModalInputLabel>
-            <ModalInput id="description" />
+            <ModalInput id="description" onChange={onChnageDescription} value={addingDescription} />
           </ModalInputCont>
           <ModalButtonCont>
-            <ModalButton>취소</ModalButton>
-            <ModalButton>확인</ModalButton>
+            <ModalButton onClick={onClickCancel}>취소</ModalButton>
+            <ModalButton onClick={onClickSubmit}>확인</ModalButton>
           </ModalButtonCont>
         </ModalBodyCont>
       </Container>
-      <Backdrop />
+      {/* <Backdrop /> */}
     </>
   );
 }
 
-export default AddPlaylistModal;
+export default connect(
+  ({ modal }) => ({
+    addingTitle: modal.addingTitle,
+    addingDescription: modal.addingDescription,
+  }),
+  {
+    changeAddingTitle,
+    changeAddingDescription,
+    postAddPlaylist,
+  }
+)(withRouter(AddPlaylistModal));

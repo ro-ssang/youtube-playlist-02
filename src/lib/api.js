@@ -37,6 +37,22 @@ export const playlistsApi = {
         access_token: localStorage.getItem(LS_TOKEN),
       },
     }),
+  postAddList: (title, description) =>
+    instance.post(
+      '/playlists',
+      {
+        snippet: {
+          title,
+          description,
+        },
+      },
+      {
+        params: {
+          part: 'snippet',
+          access_token: localStorage.getItem(LS_TOKEN),
+        },
+      }
+    ),
 };
 
 export const playItemsApi = {
