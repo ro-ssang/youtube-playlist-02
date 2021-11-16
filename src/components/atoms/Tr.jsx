@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ReactComponent as Ellipsis } from '../../assets/icons/ellipsis.svg';
 import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { showMenu, setPosition } from '../../store/menu';
+import { selectVideo } from '../../store/videos';
 
 const IconContainer = styled.div`
   position: absolute;
@@ -86,7 +87,7 @@ const EllipsisIcon = styled(Ellipsis)`
   cursor: pointer;
 `;
 
-function Tr({ thumbnailUrl, title, artist, time, onPlay, showMenu, setPosition }) {
+function Tr({ videoId, thumbnailUrl, title, artist, time, onPlay, showMenu, setPosition, selectVideo }) {
   const trRef = useRef();
 
   const onShowMenu = useCallback(() => {
@@ -104,8 +105,9 @@ function Tr({ thumbnailUrl, title, artist, time, onPlay, showMenu, setPosition }
     const offsetLeft = tableOffsetLeft + tableOffsetWidth - 35;
 
     setPosition(offsetTop, offsetLeft);
+    selectVideo(videoId);
     showMenu();
-  }, [showMenu, setPosition]);
+  }, [showMenu, setPosition, selectVideo, videoId]);
 
   return (
     <Container ref={trRef}>
@@ -132,7 +134,8 @@ function Tr({ thumbnailUrl, title, artist, time, onPlay, showMenu, setPosition }
   );
 }
 
-export default connect(({}) => ({}), {
+export default connect(() => ({}), {
   showMenu,
   setPosition,
+  selectVideo,
 })(Tr);

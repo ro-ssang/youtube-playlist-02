@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { ReactComponent as AddList } from '../../assets/icons/addList.svg';
 import { ReactComponent as Stop } from '../../assets/icons/stop.svg';
 import { hideMenu } from '../../store/menu';
+import { showAddItemModal } from '../../store/modal';
+import { selectVideo } from '../../store/videos';
 
 const Container = styled.ul`
   position: fixed;
@@ -59,10 +61,16 @@ const Backdrop = styled.div`
   z-index: 9990;
 `;
 
-function PlayItemMenu({ offsetTop, offsetLeft, hideMenu }) {
-  const onClickBackdrop = useCallback(() => {
+function PlayItemMenu({ offsetTop, offsetLeft, hideMenu, selectVideo, showAddItemModal }) {
+  const onShowAddItemModal = useCallback(() => {
+    showAddItemModal();
     hideMenu();
-  }, [hideMenu]);
+  }, [showAddItemModal, hideMenu]);
+
+  const onClickBackdrop = useCallback(() => {
+    selectVideo('');
+    hideMenu();
+  }, [hideMenu, selectVideo]);
 
   return (
     <>
@@ -71,7 +79,7 @@ function PlayItemMenu({ offsetTop, offsetLeft, hideMenu }) {
           <span>재생목록에서 삭제</span>
           <StopIcon />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={onShowAddItemModal}>
           <span>재생목록에 추가</span>
           <AddListIcon />
         </MenuItem>
@@ -88,5 +96,7 @@ export default connect(
   }),
   {
     hideMenu,
+    selectVideo,
+    showAddItemModal,
   }
 )(PlayItemMenu);

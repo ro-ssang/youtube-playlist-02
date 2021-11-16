@@ -6,6 +6,7 @@ import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
 import { setPlayer } from '../../store/player';
 import Th from '../atoms/Th';
 import Tr from '../atoms/Tr';
+import AddPlayItemModal from './AddPlayItemModal';
 import PlayItemMenu from './PlayItemMenu';
 
 const Container = styled.table`
@@ -20,7 +21,7 @@ const TBody = styled.tbody`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
-function PlayItemTable({ match, playItems, showingMenu, player, setPlayer }) {
+function PlayItemTable({ match, playItems, showingMenu, player, setPlayer, showingAddItemModal }) {
   const onPlay = useCallback(
     (index) => {
       const {
@@ -55,12 +56,17 @@ function PlayItemTable({ match, playItems, showingMenu, player, setPlayer }) {
             {playItems.map((item, index) => {
               const {
                 id,
-                snippet: { title, videoOwnerChannelTitle: artist },
+                snippet: {
+                  resourceId: { videoId },
+                  title,
+                  videoOwnerChannelTitle: artist,
+                },
               } = item;
               const thumbnailUrl = item.snippet.thumbnails.medium?.url;
               return (
                 <Tr
                   key={id}
+                  videoId={videoId}
                   thumbnailUrl={thumbnailUrl}
                   title={title}
                   artist={artist}
@@ -73,13 +79,15 @@ function PlayItemTable({ match, playItems, showingMenu, player, setPlayer }) {
         )}
       </Container>
       {showingMenu && <PlayItemMenu />}
+      {showingAddItemModal && <AddPlayItemModal />}
     </>
   );
 }
 
 export default connect(
-  ({ menu, player }) => ({
+  ({ menu, modal, player }) => ({
     showingMenu: menu.showingMenu,
+    showingAddItemModal: modal.showing.addItem,
     player: player.player,
   }),
   { setPlayer }

@@ -1,9 +1,10 @@
-import { playlistsApi } from '../lib/api';
+import { playItemsApi, playlistsApi } from '../lib/api';
 
 const HAS_REDIRECTED = 'modal/HAS_REDIRECTED';
 const SHOW_ADD_MODAL = 'modal/SHOW_ADD_MODAL';
 const SHOW_DELETE_MODAL = 'modal/SHOW_DELETE_MODAL';
 const SHOW_UPDATE_MODAL = 'modal/SHOW_UPDATE_MODAL';
+const SHOW_ADD_ITEM_MODAL = 'modal/SHOW_ADD_ITEM_MODAL';
 const HIDE_MODAL = 'modal/HIDE_MODAL';
 const ADDING_TITLE = 'modal/ADDING_TITLE';
 const ADDING_DESCRIPTION = 'modal/ADDING_DESCRIPTION';
@@ -16,11 +17,15 @@ const DELETE_PLAYLIST_FAILURE = 'modal/DELETE_PLAYLIST_FAILURE';
 const UPDATE_PLAYLIST = 'modal/UPDATE_PLAYLIST';
 const UPDATE_PLAYLIST_SUCESS = 'modal/UPDATE_PLAYLIST_SUCESS';
 const UPDATE_PLAYLIST_FAILURE = 'modal/UPDATE_PLAYLIST_FAILURE';
+const ADD_PLAYITEM = 'modal/ADD_PLAYITEM';
+const ADD_PLAYITEM_SUCESS = 'modal/ADD_PLAYITEM_SUCESS';
+const ADD_PLAYITEM_FAILURE = 'modal/ADD_PLAYITEM_FAILURE';
 
 export const changeRedirectState = () => ({ type: HAS_REDIRECTED });
 export const showAddModal = () => ({ type: SHOW_ADD_MODAL });
 export const showDeleteModal = () => ({ type: SHOW_DELETE_MODAL });
 export const showUpdateModal = () => ({ type: SHOW_UPDATE_MODAL });
+export const showAddItemModal = () => ({ type: SHOW_ADD_ITEM_MODAL });
 export const hideModal = () => ({ type: HIDE_MODAL });
 export const changeAddingTitle = (text) => ({ type: ADDING_TITLE, payload: text });
 export const changeAddingDescription = (text) => ({ type: ADDING_DESCRIPTION, payload: text });
@@ -71,6 +76,23 @@ export const updatePlaylist = (playlistId, history) => async (dispatch, getState
     throw error;
   }
 };
+export const postAddPlayItem = (playlistId, history) => async (dispatch, getState) => {
+  const {
+    videos: { selectedVideoId },
+  } = getState();
+  dispatch({ type: ADD_PLAYITEM });
+  try {
+    await playItemsApi.postAddPlayItem(playlistId, selectedVideoId);
+    dispatch({ type: ADD_PLAYITEM_SUCESS });
+    if (history) {
+      history.push(`/playlist/${playlistId}`);
+      dispatch({ type: HAS_REDIRECTED });
+    }
+  } catch (error) {
+    dispatch({ type: ADD_PLAYITEM_FAILURE, payload: error, error: true });
+    throw error;
+  }
+};
 
 const initialState = {
   hasRedirected: false,
@@ -78,6 +100,7 @@ const initialState = {
     add: false,
     delete: false,
     update: false,
+    addItem: false,
   },
   loading: {
     ADD_PLAYLIST: false,
@@ -98,8 +121,10 @@ function modal(state = initialState, action) {
       return { ...state, showing: { ...state.showing, delete: true } };
     case SHOW_UPDATE_MODAL:
       return { ...state, showing: { ...state.showing, update: true } };
+    case SHOW_ADD_ITEM_MODAL:
+      return { ...state, showing: { ...state.showing, addItem: true } };
     case HIDE_MODAL:
-      return { ...state, showing: { add: false, delete: false, update: false } };
+      return { ...state, showing: { add: false, delete: false, update: false, addItem: false } };
     case ADDING_TITLE:
       return { ...state, addingTitle: action.payload };
     case ADDING_DESCRIPTION:

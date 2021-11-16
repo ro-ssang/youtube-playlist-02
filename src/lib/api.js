@@ -88,6 +88,25 @@ export const playItemsApi = {
         access_token: localStorage.getItem(LS_TOKEN),
       },
     }),
+  postAddPlayItem: (playlistId, videoId) =>
+    instance.post(
+      '/playlistItems',
+      {
+        snippet: {
+          playlistId,
+          resourceId: {
+            kind: 'youtube#video',
+            videoId,
+          },
+        },
+      },
+      {
+        params: {
+          part: 'snippet',
+          access_token: localStorage.getItem(LS_TOKEN),
+        },
+      }
+    ),
 };
 
 export const searchApi = {
