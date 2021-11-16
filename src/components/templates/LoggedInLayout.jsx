@@ -13,6 +13,7 @@ import LogoutBox from '../modules/LogoutBox';
 import Loader from '../atoms/Loader';
 import { connect } from 'react-redux';
 import { login } from '../../store/auth';
+import { changeRedirectState } from '../../store/modal';
 import { getPlaylists } from '../../store/user';
 import { getPopularVideos } from '../../store/videos';
 import PlayerBar from '../modules/PlayerBar';
@@ -35,20 +36,37 @@ const Nav = styled.nav`
 const BrowseList = styled.ul``;
 const PlayList = styled.ul``;
 
-function LoggedInLayout({ children, isLogin, login, getPlaylists, loadingPlaylists, playlists }) {
-  // // 로그인시 토큰 설정
+function LoggedInLayout({
+  children,
+  isLogin,
+  login,
+  getPlaylists,
+  loadingPlaylists,
+  playlists,
+  hasRedirected,
+  changeRedirectState,
+}) {
+  // 로그인시 토큰 설정
   useEffect(() => {
     if (localStorage.getItem(LS_TOKEN)) {
       login();
     }
   }, [login]);
 
-  // // 로그인시 플레이리스트 가져오기
+  // 로그인시 플레이리스트 가져오기
   useEffect(() => {
     if (isLogin) {
       getPlaylists();
     }
   }, [isLogin, getPlaylists]);
+
+  // 리다이렉트시 플레이리스트 가져오기
+  useEffect(() => {
+    if (hasRedirected) {
+      getPlaylists();
+      changeRedirectState();
+    }
+  }, [hasRedirected, changeRedirectState, getPlaylists]);
 
   return (
     <Wrapper>
@@ -95,14 +113,16 @@ function LoggedInLayout({ children, isLogin, login, getPlaylists, loadingPlaylis
 }
 
 export default connect(
-  ({ auth, user }) => ({
+  ({ auth, user, modal }) => ({
     isLogin: auth.isLogin,
     loadingPlaylists: user.loading.PLAYLISTS,
     playlists: user.playlists,
+    hasRedirected: modal.hasRedirected,
   }),
   {
     login,
     getPlaylists,
     getPopularVideos,
+    changeRedirectState,
   }
 )(LoggedInLayout);

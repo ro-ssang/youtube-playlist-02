@@ -52,7 +52,6 @@ export const getPlayItems = (id) => async (dispatch) => {
     const {
       data: { items },
     } = await playItemsApi.getPlayItems(id);
-    console.log(items);
     dispatch({ type: PLAYITEMS_SUCCESS, payload: items });
   } catch (error) {
     dispatch({ type: PLAYITEMS_FAILURE, payload: error, error: true });
