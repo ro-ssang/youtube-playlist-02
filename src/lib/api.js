@@ -60,6 +60,22 @@ export const playlistsApi = {
         access_token: localStorage.getItem(LS_TOKEN),
       },
     }),
+  updateList: (playlistId, title) =>
+    instance.put(
+      '/playlists',
+      {
+        id: playlistId,
+        snippet: {
+          title,
+        },
+      },
+      {
+        params: {
+          part: 'snippet',
+          access_token: localStorage.getItem(LS_TOKEN),
+        },
+      }
+    ),
 };
 
 export const playItemsApi = {

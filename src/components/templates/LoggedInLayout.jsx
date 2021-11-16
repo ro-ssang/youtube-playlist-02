@@ -22,6 +22,7 @@ import { LS_TOKEN } from '../../contants';
 import LoginButton from '../atoms/LoginButton';
 import AddPlaylistModal from '../modules/AddPlaylistModal';
 import DeletePlaylistModal from '../modules/DeletePlaylistModal';
+import UpdatePlaylistModal from '../modules/UpdatePlaylistModal';
 
 const Wrapper = styled.div`
   display: grid;
@@ -49,6 +50,7 @@ function LoggedInLayout({
   showingAddModal,
   showAddModal,
   showingDeleteModal,
+  showingUpdateModal,
 }) {
   // 로그인시 토큰 설정
   useEffect(() => {
@@ -117,6 +119,7 @@ function LoggedInLayout({
       </Main>
       {showingAddModal && <AddPlaylistModal />}
       {showingDeleteModal && <DeletePlaylistModal />}
+      {showingUpdateModal && <UpdatePlaylistModal />}
     </Wrapper>
   );
 }
@@ -129,6 +132,7 @@ export default connect(
     hasRedirected: modal.hasRedirected,
     showingAddModal: modal.showing.add,
     showingDeleteModal: modal.showing.delete,
+    showingUpdateModal: modal.showing.update,
   }),
   {
     login,

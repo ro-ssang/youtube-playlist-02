@@ -8,7 +8,7 @@ import { ReactComponent as TrashCan } from '../../assets/icons/trash-can.svg';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
-import { showDeleteModal } from '../../store/modal';
+import { showDeleteModal, showUpdateModal } from '../../store/modal';
 import { setPlayer } from '../../store/player';
 
 const Container = styled.div`
@@ -70,7 +70,7 @@ const PlayIcon = styled(Play)`
   margin-right: 0.25rem;
 `;
 
-function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModal }) {
+function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModal, showUpdateModal }) {
   const onPlay = useCallback(() => {
     const {
       params: { playlistId },
@@ -87,6 +87,10 @@ function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModa
   const onShowDeleteModal = useCallback(() => {
     showDeleteModal();
   }, [showDeleteModal]);
+
+  const onShowUpdateModal = useCallback(() => {
+    showUpdateModal();
+  }, [showUpdateModal]);
 
   return (
     <Container>
@@ -108,7 +112,7 @@ function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModa
                 <TrashCanIcon />
                 재생목록 삭제
               </ActionButton>
-              <ActionButton>
+              <ActionButton onClick={onShowUpdateModal}>
                 <PenIcon />
                 재생목록 수정
               </ActionButton>
@@ -131,5 +135,5 @@ export default connect(
     playlistDetail: user.playlistDetail,
     player: player.player,
   }),
-  { setPlayer, showDeleteModal }
+  { setPlayer, showDeleteModal, showUpdateModal }
 )(withRouter(PlayItemInfo));
