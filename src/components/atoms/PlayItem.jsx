@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -11,6 +12,8 @@ const StyledLink = styled(Link)`
   align-items: center;
   padding: 0.25rem;
   width: 100%;
+  background: ${({ theme, selected }) => (selected ? theme.colors.sidebar.background.selected : 'none')};
+  border-radius: 6px;
 
   &::before {
     content: '';
@@ -30,14 +33,21 @@ const Text = styled.span`
   overflow: hidden;
 `;
 
-function PlayItem({ path, text }) {
+function PlayItem({ location, path, text }) {
+  const [isSelected, setSelected] = useState(false);
+
+  useEffect(() => {
+    const { pathname } = location;
+    setSelected(pathname === path);
+  }, [location, path, setSelected]);
+
   return (
     <Container>
-      <StyledLink to={path}>
+      <StyledLink to={path} selected={isSelected}>
         <Text>{text}</Text>
       </StyledLink>
     </Container>
   );
 }
 
-export default PlayItem;
+export default withRouter(PlayItem);
