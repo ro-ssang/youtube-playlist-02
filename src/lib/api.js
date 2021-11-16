@@ -89,3 +89,16 @@ export const playItemsApi = {
       },
     }),
 };
+
+export const searchApi = {
+  getSearchByKeyword: (keyword) =>
+    instance.get('/search', {
+      params: {
+        part: 'snippet',
+        maxResults: 20,
+        q: keyword,
+        type: 'video',
+        access_token: localStorage.getItem(LS_TOKEN),
+      },
+    }),
+};

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import SearchInput from '../atoms/SearchInput';
 import { ReactComponent as Search } from '../../assets/icons/search.svg';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { changeKeyword } from '../../store/videos';
 
 const Form = styled.form`
   position: relative;
@@ -19,13 +22,36 @@ const SearchIcon = styled(Search)`
   height: 12px;
 `;
 
-function SearchForm() {
+function SearchForm({ history, keyword, changeKeyword }) {
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      history.push(`/search?keyword=${keyword}`);
+      changeKeyword('');
+    },
+    [history, keyword, changeKeyword]
+  );
+
+  const onChange = useCallback(
+    (e) => {
+      changeKeyword(e.target.value);
+    },
+    [changeKeyword]
+  );
+
   return (
-    <Form>
+    <Form onSubmit={onSubmit}>
       <SearchIcon />
-      <SearchInput placeholder="음악을 검색하세요" />
+      <SearchInput onChange={onChange} value={keyword} placeholder="음악을 검색하세요" />
     </Form>
   );
 }
 
-export default SearchForm;
+export default connect(
+  ({ videos }) => ({
+    keyword: videos.keyword,
+  }),
+  {
+    changeKeyword,
+  }
+)(withRouter(SearchForm));

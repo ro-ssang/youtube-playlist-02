@@ -15,8 +15,8 @@ const Input = styled.input`
   }}
 `;
 
-function SearchInput({ placeholder }) {
-  return <Input placeholder={placeholder} />;
+function SearchInput({ placeholder, onChange, value }) {
+  return <Input placeholder={placeholder} onChange={onChange} value={value} />;
 }
 
 export default SearchInput;
