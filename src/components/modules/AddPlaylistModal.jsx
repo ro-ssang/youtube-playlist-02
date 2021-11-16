@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
-import { changeAddingTitle, changeAddingDescription, postAddPlaylist } from '../../store/modal';
+import { changeAddingTitle, changeAddingDescription, postAddPlaylist, hideModal } from '../../store/modal';
 
 const Container = styled.div`
   position: fixed;
@@ -97,6 +97,7 @@ function AddPlaylistModal({
   changeAddingTitle,
   changeAddingDescription,
   postAddPlaylist,
+  hideModal,
 }) {
   const onChnageTitle = useCallback(
     (e) => {
@@ -115,13 +116,15 @@ function AddPlaylistModal({
   const onClickCancel = useCallback(() => {
     changeAddingTitle('');
     changeAddingDescription('');
-  }, [changeAddingTitle, changeAddingDescription]);
+    hideModal();
+  }, [changeAddingTitle, changeAddingDescription, hideModal]);
 
   const onClickSubmit = useCallback(() => {
     postAddPlaylist(history);
     changeAddingTitle('');
     changeAddingDescription('');
-  }, [changeAddingTitle, changeAddingDescription, postAddPlaylist, history]);
+    hideModal();
+  }, [changeAddingTitle, changeAddingDescription, postAddPlaylist, history, hideModal]);
 
   return (
     <>
@@ -148,7 +151,7 @@ function AddPlaylistModal({
           </ModalButtonCont>
         </ModalBodyCont>
       </Container>
-      {/* <Backdrop /> */}
+      <Backdrop />
     </>
   );
 }
@@ -162,5 +165,6 @@ export default connect(
     changeAddingTitle,
     changeAddingDescription,
     postAddPlaylist,
+    hideModal,
   }
 )(withRouter(AddPlaylistModal));

@@ -17,9 +17,9 @@ const PlusIcon = styled(Plus)`
   opacity: 0.5;
 `;
 
-function AddPlayItem() {
+function AddPlayItem({ onClick }) {
   return (
-    <Container>
+    <Container onClick={onClick}>
       <PlusIcon />새 재생목록
     </Container>
   );

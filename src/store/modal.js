@@ -1,6 +1,8 @@
 import { playlistsApi } from '../lib/api';
 
 const HAS_REDIRECTED = 'modal/HAS_REDIRECTED';
+const SHOW_MODAL = 'modal/SHOW_MODAL';
+const HIDE_MODAL = 'modal/HIDE_MODAL';
 const ADDING_TITLE = 'modal/ADDING_TITLE';
 const ADDING_DESCRIPTION = 'modal/ADDING_DESCRIPTION';
 const ADD_PLAYLIST = 'modal/ADD_PLAYLIST';
@@ -8,6 +10,8 @@ const ADD_PLAYLIST_SUCESS = 'modal/ADD_PLAYLIST_SUCESS';
 const ADD_PLAYLIST_FAILURE = 'modal/ADD_PLAYLIST_FAILURE';
 
 export const changeRedirectState = () => ({ type: HAS_REDIRECTED });
+export const showModal = () => ({ type: SHOW_MODAL });
+export const hideModal = () => ({ type: HIDE_MODAL });
 export const changeAddingTitle = (text) => ({ type: ADDING_TITLE, payload: text });
 export const changeAddingDescription = (text) => ({ type: ADDING_DESCRIPTION, payload: text });
 export const postAddPlaylist = (history) => async (dispatch, getState) => {
@@ -30,6 +34,7 @@ export const postAddPlaylist = (history) => async (dispatch, getState) => {
 
 const initialState = {
   hasRedirected: false,
+  showingModal: false,
   loading: {
     ADD_PLAYLIST: false,
   },
@@ -41,6 +46,10 @@ function modal(state = initialState, action) {
   switch (action.type) {
     case HAS_REDIRECTED:
       return { ...state, hasRedirected: !state.hasRedirected };
+    case SHOW_MODAL:
+      return { ...state, showingModal: true };
+    case HIDE_MODAL:
+      return { ...state, showingModal: false };
     case ADDING_TITLE:
       return { ...state, addingTitle: action.payload };
     case ADDING_DESCRIPTION:
