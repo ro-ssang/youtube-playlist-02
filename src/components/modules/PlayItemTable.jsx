@@ -6,6 +6,7 @@ import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
 import { setPlayer } from '../../store/player';
 import Th from '../atoms/Th';
 import Tr from '../atoms/Tr';
+import PlayItemMenu from './PlayItemMenu';
 
 const Container = styled.table`
   width: 100%;
@@ -69,6 +70,7 @@ function PlayItemTable({ match, playItems, player, setPlayer }) {
           })}
         </TBody>
       )}
+      <PlayItemMenu />
     </Container>
   );
 }
