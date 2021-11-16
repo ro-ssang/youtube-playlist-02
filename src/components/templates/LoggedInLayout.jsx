@@ -13,7 +13,7 @@ import LogoutBox from '../modules/LogoutBox';
 import Loader from '../atoms/Loader';
 import { connect } from 'react-redux';
 import { login } from '../../store/auth';
-import { changeRedirectState, showModal } from '../../store/modal';
+import { changeRedirectState, showAddModal } from '../../store/modal';
 import { getPlaylists } from '../../store/user';
 import { getPopularVideos } from '../../store/videos';
 import PlayerBar from '../modules/PlayerBar';
@@ -21,6 +21,7 @@ import Video from '../modules/Video';
 import { LS_TOKEN } from '../../contants';
 import LoginButton from '../atoms/LoginButton';
 import AddPlaylistModal from '../modules/AddPlaylistModal';
+import DeletePlaylistModal from '../modules/DeletePlaylistModal';
 
 const Wrapper = styled.div`
   display: grid;
@@ -45,8 +46,9 @@ function LoggedInLayout({
   playlists,
   hasRedirected,
   changeRedirectState,
-  showingModal,
-  showModal,
+  showingAddModal,
+  showAddModal,
+  showingDeleteModal,
 }) {
   // 로그인시 토큰 설정
   useEffect(() => {
@@ -71,8 +73,8 @@ function LoggedInLayout({
   }, [hasRedirected, changeRedirectState, getPlaylists]);
 
   const onClickNewPlaylist = useCallback(() => {
-    showModal();
-  }, [showModal]);
+    showAddModal();
+  }, [showAddModal]);
 
   return (
     <Wrapper>
@@ -113,7 +115,8 @@ function LoggedInLayout({
           </>
         )}
       </Main>
-      {showingModal && <AddPlaylistModal />}
+      {showingAddModal && <AddPlaylistModal />}
+      {showingDeleteModal && <DeletePlaylistModal />}
     </Wrapper>
   );
 }
@@ -124,13 +127,14 @@ export default connect(
     loadingPlaylists: user.loading.PLAYLISTS,
     playlists: user.playlists,
     hasRedirected: modal.hasRedirected,
-    showingModal: modal.showingModal,
+    showingAddModal: modal.showing.add,
+    showingDeleteModal: modal.showing.delete,
   }),
   {
     login,
     getPlaylists,
     getPopularVideos,
     changeRedirectState,
-    showModal,
+    showAddModal,
   }
 )(LoggedInLayout);

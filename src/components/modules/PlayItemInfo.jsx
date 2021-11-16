@@ -8,6 +8,7 @@ import { ReactComponent as TrashCan } from '../../assets/icons/trash-can.svg';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
+import { showDeleteModal } from '../../store/modal';
 import { setPlayer } from '../../store/player';
 
 const Container = styled.div`
@@ -69,7 +70,7 @@ const PlayIcon = styled(Play)`
   margin-right: 0.25rem;
 `;
 
-function PlayItemInfo({ match, playlistDetail, player, setPlayer }) {
+function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModal }) {
   const onPlay = useCallback(() => {
     const {
       params: { playlistId },
@@ -82,6 +83,10 @@ function PlayItemInfo({ match, playlistDetail, player, setPlayer }) {
       player.loadPlaylist({ list: playlistId, listType: 'playlist' });
     }
   }, [match, player, setPlayer]);
+
+  const onShowDeleteModal = useCallback(() => {
+    showDeleteModal();
+  }, [showDeleteModal]);
 
   return (
     <Container>
@@ -99,7 +104,7 @@ function PlayItemInfo({ match, playlistDetail, player, setPlayer }) {
               marginBottom="1rem"
             />
             <ActionContainer count="2">
-              <ActionButton>
+              <ActionButton onClick={onShowDeleteModal}>
                 <TrashCanIcon />
                 재생목록 삭제
               </ActionButton>
@@ -126,5 +131,5 @@ export default connect(
     playlistDetail: user.playlistDetail,
     player: player.player,
   }),
-  { setPlayer }
+  { setPlayer, showDeleteModal }
 )(withRouter(PlayItemInfo));

@@ -53,6 +53,13 @@ export const playlistsApi = {
         },
       }
     ),
+  deleteList: (playlistId) =>
+    instance.delete('/playlists', {
+      params: {
+        id: playlistId,
+        access_token: localStorage.getItem(LS_TOKEN),
+      },
+    }),
 };
 
 export const playItemsApi = {
