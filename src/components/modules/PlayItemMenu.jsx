@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as AddList } from '../../assets/icons/addList.svg';
 import { ReactComponent as Stop } from '../../assets/icons/stop.svg';
+import { hideMenu } from '../../store/menu';
 
 const Container = styled.ul`
   position: fixed;
-  top: 406px;
-  left: 1172px;
+  top: ${({ offsetTop }) => offsetTop + 'px'};
+  left: ${({ offsetLeft }) => offsetLeft + 'px'};
   max-width: 350px;
   min-width: 185px;
   backdrop-filter: blur(70px) saturate(210%);
@@ -57,10 +59,14 @@ const Backdrop = styled.div`
   z-index: 9990;
 `;
 
-function PlayItemMenu() {
+function PlayItemMenu({ offsetTop, offsetLeft, hideMenu }) {
+  const onClickBackdrop = useCallback(() => {
+    hideMenu();
+  }, [hideMenu]);
+
   return (
     <>
-      <Container>
+      <Container offsetTop={offsetTop} offsetLeft={offsetLeft}>
         <MenuItem>
           <span>재생목록에서 삭제</span>
           <StopIcon />
@@ -70,9 +76,17 @@ function PlayItemMenu() {
           <AddListIcon />
         </MenuItem>
       </Container>
-      {/* <Backdrop /> */}
+      <Backdrop onClick={onClickBackdrop} />
     </>
   );
 }
 
-export default PlayItemMenu;
+export default connect(
+  ({ menu }) => ({
+    offsetTop: menu.position.offsetTop,
+    offsetLeft: menu.position.offsetLeft,
+  }),
+  {
+    hideMenu,
+  }
+)(PlayItemMenu);

@@ -20,7 +20,7 @@ const TBody = styled.tbody`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
-function PlayItemTable({ match, playItems, player, setPlayer }) {
+function PlayItemTable({ match, playItems, showingMenu, player, setPlayer }) {
   const onPlay = useCallback(
     (index) => {
       const {
@@ -38,45 +38,48 @@ function PlayItemTable({ match, playItems, player, setPlayer }) {
   );
 
   return (
-    <Container>
-      <thead>
-        <tr>
-          <Th width="40%" isFirst={true}>
-            노래
-          </Th>
-          <Th width="20%">앨범</Th>
-          <Th width="30%">아티스트</Th>
-          <Th width="10%">시간</Th>
-        </tr>
-      </thead>
-      {playItems && (
-        <TBody>
-          {playItems.map((item, index) => {
-            const {
-              id,
-              snippet: { title, videoOwnerChannelTitle: artist },
-            } = item;
-            const thumbnailUrl = item.snippet.thumbnails.medium?.url;
-            return (
-              <Tr
-                key={id}
-                thumbnailUrl={thumbnailUrl}
-                title={title}
-                artist={artist}
-                time="4:02"
-                onPlay={() => onPlay(index)}
-              />
-            );
-          })}
-        </TBody>
-      )}
-      <PlayItemMenu />
-    </Container>
+    <>
+      <Container>
+        <thead>
+          <tr>
+            <Th width="40%" isFirst={true}>
+              노래
+            </Th>
+            <Th width="20%">앨범</Th>
+            <Th width="30%">아티스트</Th>
+            <Th width="10%">시간</Th>
+          </tr>
+        </thead>
+        {playItems && (
+          <TBody>
+            {playItems.map((item, index) => {
+              const {
+                id,
+                snippet: { title, videoOwnerChannelTitle: artist },
+              } = item;
+              const thumbnailUrl = item.snippet.thumbnails.medium?.url;
+              return (
+                <Tr
+                  key={id}
+                  thumbnailUrl={thumbnailUrl}
+                  title={title}
+                  artist={artist}
+                  time="4:02"
+                  onPlay={() => onPlay(index)}
+                />
+              );
+            })}
+          </TBody>
+        )}
+      </Container>
+      {showingMenu && <PlayItemMenu />}
+    </>
   );
 }
 
 export default connect(
-  ({ player }) => ({
+  ({ menu, player }) => ({
+    showingMenu: menu.showingMenu,
     player: player.player,
   }),
   { setPlayer }

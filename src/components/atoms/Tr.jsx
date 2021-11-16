@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as Ellipsis } from '../../assets/icons/ellipsis.svg';
 import { ReactComponent as Play } from '../../assets/icons/play.svg';
+import { showMenu, setPosition } from '../../store/menu';
 
 const IconContainer = styled.div`
   position: absolute;
@@ -84,9 +86,29 @@ const EllipsisIcon = styled(Ellipsis)`
   cursor: pointer;
 `;
 
-function Tr({ thumbnailUrl, title, artist, time, onPlay }) {
+function Tr({ thumbnailUrl, title, artist, time, onPlay, showMenu, setPosition }) {
+  const trRef = useRef();
+
+  const onShowMenu = useCallback(() => {
+    const tableElem = trRef.current.closest('table');
+    const trElem = trRef.current;
+
+    const tableOffsetTop = tableElem.offsetTop;
+    const tableOffsetLeft = tableElem.offsetLeft;
+    const tableOffsetWidth = tableElem.offsetWidth;
+
+    const trOffsetTop = trElem.offsetTop;
+    const trClientHeight = trElem.clientHeight;
+
+    const offsetTop = tableOffsetTop + trOffsetTop + trClientHeight * (2 / 3);
+    const offsetLeft = tableOffsetLeft + tableOffsetWidth - 35;
+
+    setPosition(offsetTop, offsetLeft);
+    showMenu();
+  }, [showMenu, setPosition]);
+
   return (
-    <Container>
+    <Container ref={trRef}>
       <Song>
         <ThumbnailContainer onClick={onPlay}>
           <Thumbnail src={thumbnailUrl} alt="썸네일" />
@@ -103,11 +125,14 @@ function Tr({ thumbnailUrl, title, artist, time, onPlay }) {
       <Time>
         <TimeInner>
           {time}
-          <EllipsisIcon />
+          <EllipsisIcon onClick={onShowMenu} />
         </TimeInner>
       </Time>
     </Container>
   );
 }
 
-export default Tr;
+export default connect(({}) => ({}), {
+  showMenu,
+  setPosition,
+})(Tr);
