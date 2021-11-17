@@ -3,21 +3,18 @@ import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 
 const Container = styled.div`
-  ${({ theme, showingPlayer }) => {
+  ${({ theme, showingVideoPlayer }) => {
     return css`
       position: fixed;
       top: 0px;
       right: ${theme.sizes.scrollBar.width};
-      display: ${showingPlayer ? 'flex' : 'none'};
+      display: ${showingVideoPlayer ? 'flex' : 'none'};
       -webkit-box-align: center;
       align-items: center;
       -webkit-box-pack: center;
       justify-content: center;
-      /* width: ${`calc(100% - ${theme.sizes.sidebar.width} - ${theme.sizes.scrollBar.width})`}; */
-      /* height: ${`calc(100vh - ${theme.sizes.playerBar.height})`}; */
-      margin-top: 50vh;
-      width: 50%;
-      height: 50%;
+      width: ${`calc(100% - ${theme.sizes.sidebar.width} - ${theme.sizes.scrollBar.width})`};
+      height: ${`calc(100vh - ${theme.sizes.playerBar.height})`};
       padding: 2.875rem 3.5rem 0px;
       background: rgb(10, 10, 10);
       transform: translate3d(0px, 0px, 0px);
@@ -27,18 +24,19 @@ const Container = styled.div`
   }}
 `;
 const YoutubePlayer = styled.div`
-  height: 100%;
+  width: 100%;
+  height: 70%;
   margin-bottom: 2.5rem;
 
   iframe {
     width: 100%;
-    height: 80%;
+    height: 100%;
   }
 `;
 
-function Video({ showingPlayer }) {
+function Video({ showingVideoPlayer }) {
   return (
-    <Container showingPlayer={showingPlayer}>
+    <Container showingVideoPlayer={showingVideoPlayer}>
       <YoutubePlayer>
         <div id="player"></div>
       </YoutubePlayer>
@@ -48,7 +46,7 @@ function Video({ showingPlayer }) {
 
 export default connect(
   ({ player }) => ({
-    showingPlayer: player.showingPlayer,
+    showingVideoPlayer: player.showingVideoPlayer,
   }),
   {}
 )(Video);

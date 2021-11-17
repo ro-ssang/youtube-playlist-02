@@ -1,6 +1,7 @@
 import { videosApi } from '../lib/api';
 
 const SHOW_PLAYER = 'player/SHOW_PLAYER';
+const TOGGLE_VIDEO_PLAYER = 'player/TOGGLE_VIDEO_PLAYER';
 const SET_PLAYER = 'player/SET_PLAYER';
 const SET_DURATION = 'player/SET_DURATION';
 const SET_CURRENT_TIME = 'player/SET_CURRENT_TIME';
@@ -17,6 +18,7 @@ const GET_VIDEO_INFO_SUCCESS = 'player/GET_VIDEO_INFO_SUCCESS';
 const GET_VIDEO_INFO_FAILURE = 'player/GET_VIDEO_INFO_FAILURE';
 
 export const showPlayer = () => ({ type: SHOW_PLAYER });
+export const toggleVideoPlayer = () => ({ type: TOGGLE_VIDEO_PLAYER });
 export const setPlayer = (player) => (dispatch) => {
   dispatch({ type: SHOW_PLAYER });
   dispatch({ type: SET_PLAYER, payload: player });
@@ -84,6 +86,7 @@ export const setMute = (bool) => ({ type: SET_MUTE, payload: bool });
 
 const initialState = {
   showingPlayer: false,
+  showingVideoPlayer: false,
   player: null,
   duration: 0,
   currentTime: 0,
@@ -104,6 +107,8 @@ function player(state = initialState, action) {
   switch (action.type) {
     case SHOW_PLAYER:
       return { ...state, showingPlayer: true };
+    case TOGGLE_VIDEO_PLAYER:
+      return { ...state, showingVideoPlayer: !state.showingVideoPlayer };
     case SET_PLAYER:
       return { ...state, player: action.payload };
     case SET_DURATION:

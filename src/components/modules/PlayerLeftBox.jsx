@@ -7,7 +7,7 @@ import { ReactComponent as Volume } from '../../assets/icons/volume.svg';
 import { ReactComponent as Mute } from '../../assets/icons/mute.svg';
 import VolumeBar from './VolumeBar';
 import { connect } from 'react-redux';
-import { setMute, setVolumePercent } from '../../store/player';
+import { setMute, setVolumePercent, toggleVideoPlayer } from '../../store/player';
 
 const Container = styled.div`
   height: 100%;
@@ -31,7 +31,7 @@ const UpIcon = styled(Up)`
   width: 24px;
   height: 24px;
   cursor: pointer;
-  transform: rotate(180deg);
+  transform: ${({ showing }) => (showing === 'false' ? 'rotate(0deg)' : 'rotate(180deg)')};
   transition: transform 0.3s ease 0s;
 `;
 const LoopIcon = styled(Loop)`
@@ -59,7 +59,15 @@ const MuteIcon = styled(Mute)`
   cursor: pointer;
 `;
 
-function PlayerLeftBox({ player, isMute, setMute, volumePercent, setVolumePercent }) {
+function PlayerLeftBox({
+  player,
+  isMute,
+  setMute,
+  volumePercent,
+  setVolumePercent,
+  toggleVideoPlayer,
+  showingVideoPlayer,
+}) {
   const onClickVolume = useCallback(() => {
     if (player) {
       if (isMute) {
@@ -77,7 +85,7 @@ function PlayerLeftBox({ player, isMute, setMute, volumePercent, setVolumePercen
   return (
     <Container>
       <IconContainer>
-        <UpIcon />
+        <UpIcon onClick={toggleVideoPlayer} showing={showingVideoPlayer.toString()} />
       </IconContainer>
       <IconContainer>
         <LoopIcon />
@@ -98,9 +106,11 @@ export default connect(
     player: player.player,
     isMute: player.isMute,
     volumePercent: player.volumePercent,
+    showingVideoPlayer: player.showingVideoPlayer,
   }),
   {
     setMute,
     setVolumePercent,
+    toggleVideoPlayer,
   }
 )(PlayerLeftBox);
