@@ -17,6 +17,14 @@ export const videosApi = {
         access_token: localStorage.getItem(LS_TOKEN),
       },
     }),
+  getVideoById: (videoId) =>
+    instance.get('/videos', {
+      params: {
+        part: 'snippet',
+        id: videoId,
+        access_token: localStorage.getItem(LS_TOKEN),
+      },
+    }),
 };
 
 export const playlistsApi = {

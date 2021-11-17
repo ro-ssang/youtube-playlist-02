@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import Loader from '../atoms/Loader';
 import PlayerCenterBox from './PlayerCenterBox';
 import PlayerLeftBox, { BarWrapper as VolumeBarWrapper } from './PlayerLeftBox';
 import PlayerRightBox from './PlayerRightBox';
 import ProgressBar, { BarWrapper, CircleContainer } from './ProgressBar';
+import { getVideoInfo } from '../../store/player';
 
 const Container = styled.div`
   position: fixed;
@@ -35,22 +37,39 @@ const Container = styled.div`
   }
 `;
 
-function PlayerBar({ showingPlayer }) {
+function PlayerBar({ showingPlayer, currentVideoId, getVideoInfo, loadingVideoInfo, videoInfo }) {
+  useEffect(() => {
+    if (currentVideoId) {
+      getVideoInfo(currentVideoId);
+    }
+  }, [currentVideoId, getVideoInfo]);
+
   return (
     <Container showingPlayer={showingPlayer}>
       <ProgressBar />
       <PlayerLeftBox />
-      <PlayerCenterBox
-        thumbnailUrl="https://i.ytimg.com/vi/Kevp2lFKSOg/mqdefault.jpg"
-        title="strawberry moon (strawberry moon)"
-        artist="IU - Topic"
-        year="2021"
-      />
+      {loadingVideoInfo && <Loader />}
+      {!loadingVideoInfo && videoInfo && (
+        <PlayerCenterBox
+          thumbnailUrl={videoInfo.snippet.thumbnails.medium.url}
+          title={videoInfo.snippet.title}
+          artist={videoInfo.snippet.channelTitle}
+          year={videoInfo.snippet.publishedAt.substring(0, 4)}
+        />
+      )}
       <PlayerRightBox />
     </Container>
   );
 }
 
-export default connect(({ player }) => ({
-  showingPlayer: player.showingPlayer,
-}))(PlayerBar);
+export default connect(
+  ({ player }) => ({
+    showingPlayer: player.showingPlayer,
+    currentVideoId: player.currentVideoId,
+    loadingVideoInfo: player.loading.VIDEO_INFO,
+    videoInfo: player.videoInfo,
+  }),
+  {
+    getVideoInfo,
+  }
+)(PlayerBar);
