@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Up } from '../../assets/icons/up.svg';
 import { ReactComponent as Loop } from '../../assets/icons/loop.svg';
 import { ReactComponent as Shuffle } from '../../assets/icons/shuffle.svg';
 import { ReactComponent as Volume } from '../../assets/icons/volume.svg';
+import { ReactComponent as Mute } from '../../assets/icons/mute.svg';
+import VolumeBar from './VolumeBar';
+import { connect } from 'react-redux';
+import { setMute, setVolumePercent } from '../../store/player';
 
 const Container = styled.div`
   height: 100%;
@@ -48,49 +52,28 @@ const VolumeIcon = styled(Volume)`
   height: 24px;
   cursor: pointer;
 `;
-const VolumeBar = styled.div`
-  position: relative;
-  width: 64px;
+const MuteIcon = styled(Mute)`
+  display: block;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
-  user-select: none;
-`;
-const BarContainer = styled.div`
-  padding: 1rem 0px;
-`;
-export const BarWrapper = styled.div`
-  position: relative;
-  height: 2px;
-`;
-const GrayBar = styled.div`
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background: rgb(144, 144, 144);
-  cursor: pointer;
-`;
-const RedBar = styled.div`
-  position: absolute;
-  top: 0px;
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.red};
-  width: 64.0625%;
-`;
-const Circle = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 64.0625%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  background: rgb(255, 255, 255);
-  border: 1px solid rgb(129, 129, 129);
-  border-radius: 50%;
-  user-select: none;
 `;
 
-function PlayerLeftBox() {
+function PlayerLeftBox({ player, isMute, setMute, volumePercent, setVolumePercent }) {
+  const onClickVolume = useCallback(() => {
+    if (player) {
+      if (isMute) {
+        player.unMute();
+        setMute(false);
+        setVolumePercent(player.getVolume());
+      } else {
+        player.mute();
+        setMute(true);
+        setVolumePercent(0);
+      }
+    }
+  }, [player, isMute, setMute, setVolumePercent]);
+
   return (
     <Container>
       <IconContainer>
@@ -103,19 +86,21 @@ function PlayerLeftBox() {
         <ShuffleIcon />
       </IconContainer>
       <IconContainer>
-        <VolumeIcon />
+        {isMute || !volumePercent ? <MuteIcon onClick={onClickVolume} /> : <VolumeIcon onClick={onClickVolume} />}
       </IconContainer>
-      <VolumeBar>
-        <BarContainer>
-          <BarWrapper>
-            <GrayBar />
-            <RedBar />
-          </BarWrapper>
-        </BarContainer>
-        <Circle />
-      </VolumeBar>
+      <VolumeBar />
     </Container>
   );
 }
 
-export default PlayerLeftBox;
+export default connect(
+  ({ player }) => ({
+    player: player.player,
+    isMute: player.isMute,
+    volumePercent: player.volumePercent,
+  }),
+  {
+    setMute,
+    setVolumePercent,
+  }
+)(PlayerLeftBox);

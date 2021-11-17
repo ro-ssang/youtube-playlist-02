@@ -6,9 +6,12 @@ const SET_DURATION = 'player/SET_DURATION';
 const SET_CURRENT_TIME = 'player/SET_CURRENT_TIME';
 const SET_CURRENT_VIDEO_ID = 'player/SET_CURRENT_VIDEO_ID';
 const SET_PROGRESS_PERCENT = 'player/SET_PROGRESS_PERCENT';
+const SET_VOLUME_PERCENT = 'player/SET_VOLUME_PERCENT';
+const SET_MUTE = 'player/SET_MUTE';
 const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
 const PROGRESS_DRAG = 'player/PROGRESS_DRAG';
+const VOLUME_DRAG = 'player/VOLUME_DRAG';
 const GET_VIDEO_INFO = 'player/GET_VIDEO_INFO';
 const GET_VIDEO_INFO_SUCCESS = 'player/GET_VIDEO_INFO_SUCCESS';
 const GET_VIDEO_INFO_FAILURE = 'player/GET_VIDEO_INFO_FAILURE';
@@ -73,8 +76,11 @@ export const getVideoInfo = (videoId) => async (dispatch) => {
 export const play = () => ({ type: PLAY });
 export const pause = () => ({ type: PAUSE });
 export const setProgressDrag = (bool) => ({ type: PROGRESS_DRAG, payload: bool });
+export const setVolumeDrag = (bool) => ({ type: VOLUME_DRAG, payload: bool });
 export const setProgressPercent = (percent) => ({ type: SET_PROGRESS_PERCENT, payload: percent });
+export const setVolumePercent = (percent) => ({ type: SET_VOLUME_PERCENT, payload: percent });
 export const setCurrentTime = (sec) => ({ type: SET_CURRENT_TIME, payload: sec });
+export const setMute = (bool) => ({ type: SET_MUTE, payload: bool });
 
 const initialState = {
   showingPlayer: false,
@@ -88,7 +94,10 @@ const initialState = {
   videoInfo: null,
   playing: false,
   progressDrag: false,
+  volumeDrag: false,
   progressPercent: 0,
+  volumePercent: 50,
+  isMute: false,
 };
 
 function player(state = initialState, action) {
@@ -105,6 +114,10 @@ function player(state = initialState, action) {
       return { ...state, currentVideoId: action.payload };
     case SET_PROGRESS_PERCENT:
       return { ...state, progressPercent: action.payload };
+    case SET_VOLUME_PERCENT:
+      return { ...state, volumePercent: action.payload };
+    case SET_MUTE:
+      return { ...state, isMute: action.payload };
     case GET_VIDEO_INFO:
       return { ...state, loading: { ...state.loading, VIDEO_INFO: true } };
     case GET_VIDEO_INFO_SUCCESS:
@@ -117,6 +130,8 @@ function player(state = initialState, action) {
       return { ...state, playing: false };
     case PROGRESS_DRAG:
       return { ...state, progressDrag: action.payload };
+    case VOLUME_DRAG:
+      return { ...state, volumeDrag: action.payload };
     default:
       return state;
   }
