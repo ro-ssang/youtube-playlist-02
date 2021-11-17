@@ -88,7 +88,7 @@ export const playItemsApi = {
         access_token: localStorage.getItem(LS_TOKEN),
       },
     }),
-  postAddPlayItem: (playlistId, videoId) =>
+  postAddPlayItem: (playlistId, resourceId) =>
     instance.post(
       '/playlistItems',
       {
@@ -96,7 +96,7 @@ export const playItemsApi = {
           playlistId,
           resourceId: {
             kind: 'youtube#video',
-            videoId,
+            videoId: resourceId,
           },
         },
       },
@@ -107,6 +107,13 @@ export const playItemsApi = {
         },
       }
     ),
+  deletePlayItem: (id) =>
+    instance.delete('/playlistItems', {
+      params: {
+        id,
+        access_token: localStorage.getItem(LS_TOKEN),
+      },
+    }),
 };
 
 export const searchApi = {

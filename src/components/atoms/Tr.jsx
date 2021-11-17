@@ -87,7 +87,7 @@ const EllipsisIcon = styled(Ellipsis)`
   cursor: pointer;
 `;
 
-function Tr({ videoId, thumbnailUrl, title, artist, time, onPlay, showMenu, setPosition, selectVideo }) {
+function Tr({ id, resourceId, thumbnailUrl, title, artist, time, onPlay, showMenu, setPosition, selectVideo }) {
   const trRef = useRef();
 
   const onShowMenu = useCallback(() => {
@@ -105,9 +105,9 @@ function Tr({ videoId, thumbnailUrl, title, artist, time, onPlay, showMenu, setP
     const offsetLeft = tableOffsetLeft + tableOffsetWidth - 35;
 
     setPosition(offsetTop, offsetLeft);
-    selectVideo(videoId);
+    selectVideo(id, resourceId);
     showMenu();
-  }, [showMenu, setPosition, selectVideo, videoId]);
+  }, [showMenu, setPosition, selectVideo, id, resourceId]);
 
   return (
     <Container ref={trRef}>

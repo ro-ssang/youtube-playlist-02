@@ -10,7 +10,7 @@ const GET_SEARCH_VIDEOS_SUCCESS = 'videos/GET_SEARCH_VIDEOS_SUCCESS';
 const GET_SEARCH_VIDEOS_FAILURE = 'videos/GET_SEARCH_VIDEOS_FAILURE';
 
 export const changeKeyword = (value) => ({ type: CHANGE_KEYWORD, payload: value });
-export const selectVideo = (videoId) => ({ type: SELECT_VIDEO, payload: videoId });
+export const selectVideo = (id, resourceId) => ({ type: SELECT_VIDEO, payload: { id, resourceId } });
 export const getPopularVideos = () => async (dispatch) => {
   dispatch({ type: GET_POPULAR_VIDEOS });
   try {
@@ -42,7 +42,10 @@ const initialState = {
     GET_SEARCH_VIDEOS: false,
   },
   keyword: '',
-  selectedVideoId: '',
+  selectedVideoId: {
+    id: '',
+    resourceId: '',
+  },
   popularVideos: null,
   searchVideos: null,
 };
@@ -52,7 +55,14 @@ function videos(state = initialState, action) {
     case CHANGE_KEYWORD:
       return { ...state, keyword: action.payload };
     case SELECT_VIDEO:
-      return { ...state, selectedVideoId: action.payload };
+      return {
+        ...state,
+        selectedVideoId: {
+          ...state.selectedVideoId,
+          id: action.payload.id,
+          resourceId: action.payload.resourceId,
+        },
+      };
     case GET_POPULAR_VIDEOS:
       return { ...state, loading: { ...state.loading, GET_POPULAR_VIDEOS: true } };
     case GET_POPULAR_VIDEOS_SUCCESS:
