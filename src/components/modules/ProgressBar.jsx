@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { calculatePercent } from '../../lib/calculatePercent';
+import { setProgressDrag, setProgressPercent, setCurrentTime } from '../../store/player';
 
 const Container = styled.div`
   position: absolute;
@@ -30,12 +33,12 @@ const RedBar = styled.div`
   top: 0px;
   height: 100%;
   background-color: rgb(255, 0, 0);
-  width: 35.9266%;
+  width: ${({ width }) => width + '%'};
 `;
 export const CircleContainer = styled.div`
   position: absolute;
   top: 0px;
-  left: 35.9266%;
+  left: ${({ left }) => left + '%'};
   display: none;
   -webkit-box-align: center;
   align-items: center;
@@ -52,20 +55,109 @@ const Circle = styled.div`
   border-radius: 50%;
 `;
 
-function ProgressBar() {
+function ProgressBar({
+  player,
+  playing,
+  currentTime,
+  duration,
+  progressDrag,
+  setProgressDrag,
+  progressPercent,
+  setProgressPercent,
+  setCurrentTime,
+  stayingPause,
+}) {
+  const contRef = useRef();
+
+  const onMouseDown = useCallback(
+    (evt) => {
+      setProgressDrag(true);
+
+      if (player && playing) {
+        player.pauseVideo();
+      }
+
+      if (player && duration) {
+        const result = calculatePercent(evt.clientX, contRef.current);
+        const seekSeconds = (duration * result) / 100;
+
+        setProgressPercent(result);
+        setCurrentTime(seekSeconds);
+        player.seekTo(seekSeconds);
+      }
+    },
+    [player, playing, duration, setProgressDrag, setProgressPercent, setCurrentTime]
+  );
+
+  const onMouseUp = useCallback(() => {
+    if (player && !playing) {
+      player.playVideo();
+    }
+    if (player && stayingPause) {
+      player.pauseVideo();
+    }
+
+    setProgressDrag(false);
+  }, [player, playing, setProgressDrag, stayingPause]);
+
+  const onMouseMove = useCallback(
+    (evt) => {
+      if (progressDrag && player && duration) {
+        const result = calculatePercent(evt.clientX, contRef.current);
+        const seekSeconds = (duration * result) / 100;
+
+        setProgressPercent(result);
+        setCurrentTime(seekSeconds);
+        player.seekTo(seekSeconds);
+      }
+    },
+    [player, duration, progressDrag, setProgressPercent, setCurrentTime]
+  );
+
+  useEffect(() => {
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseMove);
+    };
+  }, [onMouseMove, onMouseUp]);
+
+  useEffect(() => {
+    if (currentTime && duration) {
+      const percent = (currentTime / duration) * 100;
+      setProgressPercent(percent);
+    }
+  }, [currentTime, duration, setProgressPercent]);
+
   return (
-    <Container>
+    <Container ref={contRef} onMouseDown={onMouseDown}>
       <BarContainer>
         <BarWrapper>
           <GrayBar />
-          <RedBar />
+          <RedBar width={progressPercent} />
         </BarWrapper>
       </BarContainer>
-      <CircleContainer>
+      <CircleContainer left={progressPercent}>
         <Circle />
       </CircleContainer>
     </Container>
   );
 }
 
-export default ProgressBar;
+export default connect(
+  ({ player }) => ({
+    player: player.player,
+    playing: player.playing,
+    currentTime: player.currentTime,
+    duration: player.duration,
+    progressDrag: player.progressDrag,
+    progressPercent: player.progressPercent,
+    stayingPause: player.stayingPause,
+  }),
+  {
+    setProgressDrag,
+    setProgressPercent,
+    setCurrentTime,
+  }
+)(ProgressBar);
