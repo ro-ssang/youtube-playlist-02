@@ -6,7 +6,6 @@ import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { ReactComponent as Next } from '../../assets/icons/next.svg';
 import { connect } from 'react-redux';
 import { formatTime } from '../../lib/formatTime';
-import { setStayPause } from '../../store/player';
 
 const Container = styled.div`
   height: 100%;
@@ -56,16 +55,14 @@ const NextIcon = styled(Next)`
   cursor: pointer;
 `;
 
-function PlayerRightBox({ player, playing, duration, currentTime, setStayPause }) {
+function PlayerRightBox({ player, playing, duration, currentTime }) {
   const togglePlayState = useCallback(() => {
     if (playing) {
       player.pauseVideo();
-      setStayPause(true);
     } else {
       player.playVideo();
-      setStayPause(false);
     }
-  }, [player, playing, setStayPause]);
+  }, [player, playing]);
 
   return (
     <Container>
@@ -90,7 +87,5 @@ export default connect(
     duration: player.duration,
     currentTime: player.currentTime,
   }),
-  {
-    setStayPause,
-  }
+  {}
 )(PlayerRightBox);

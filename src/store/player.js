@@ -8,7 +8,6 @@ const SET_CURRENT_VIDEO_ID = 'player/SET_CURRENT_VIDEO_ID';
 const SET_PROGRESS_PERCENT = 'player/SET_PROGRESS_PERCENT';
 const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
-const STAY_PAUSE = 'player/STAY_PAUSE';
 const PROGRESS_DRAG = 'player/PROGRESS_DRAG';
 const GET_VIDEO_INFO = 'player/GET_VIDEO_INFO';
 const GET_VIDEO_INFO_SUCCESS = 'player/GET_VIDEO_INFO_SUCCESS';
@@ -73,7 +72,6 @@ export const getVideoInfo = (videoId) => async (dispatch) => {
 };
 export const play = () => ({ type: PLAY });
 export const pause = () => ({ type: PAUSE });
-export const setStayPause = (bool) => ({ type: STAY_PAUSE, payload: bool });
 export const setProgressDrag = (bool) => ({ type: PROGRESS_DRAG, payload: bool });
 export const setProgressPercent = (percent) => ({ type: SET_PROGRESS_PERCENT, payload: percent });
 export const setCurrentTime = (sec) => ({ type: SET_CURRENT_TIME, payload: sec });
@@ -89,7 +87,6 @@ const initialState = {
   },
   videoInfo: null,
   playing: false,
-  stayingPause: false,
   progressDrag: false,
   progressPercent: 0,
 };
@@ -118,8 +115,6 @@ function player(state = initialState, action) {
       return { ...state, playing: true };
     case PAUSE:
       return { ...state, playing: false };
-    case STAY_PAUSE:
-      return { ...state, stayingPause: action.payload };
     case PROGRESS_DRAG:
       return { ...state, progressDrag: action.payload };
     default:

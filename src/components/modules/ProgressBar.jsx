@@ -28,17 +28,30 @@ const GrayBar = styled.div`
   background: rgb(144, 144, 144);
   cursor: pointer;
 `;
-const RedBar = styled.div`
+const RedBar = styled.div.attrs(({ width }) => ({
+  style: {
+    width: width + '%',
+  },
+}))`
   position: absolute;
   top: 0px;
   height: 100%;
   background-color: rgb(255, 0, 0);
-  width: ${({ width }) => width + '%'};
 `;
-export const CircleContainer = styled.div`
+// const RedBar = styled.div`
+//   position: absolute;
+//   top: 0px;
+//   height: 100%;
+//   background-color: rgb(255, 0, 0);
+//   width: ${({ width }) => width + '%'};
+// `;
+export const CircleContainer = styled.div.attrs(({ left }) => ({
+  style: {
+    left: left + '%',
+  },
+}))`
   position: absolute;
   top: 0px;
-  left: ${({ left }) => left + '%'};
   display: none;
   -webkit-box-align: center;
   align-items: center;
@@ -48,6 +61,19 @@ export const CircleContainer = styled.div`
   height: 100%;
   transform: translateX(-50%);
 `;
+// export const CircleContainer = styled.div`
+//   position: absolute;
+//   top: 0px;
+//   left: ${({ left }) => left + '%'};
+//   display: none;
+//   -webkit-box-align: center;
+//   align-items: center;
+//   -webkit-box-pack: center;
+//   justify-content: center;
+//   width: 34px;
+//   height: 100%;
+//   transform: translateX(-50%);
+// `;
 const Circle = styled.div`
   width: 14px;
   height: 14px;
@@ -65,7 +91,6 @@ function ProgressBar({
   progressPercent,
   setProgressPercent,
   setCurrentTime,
-  stayingPause,
 }) {
   const contRef = useRef();
 
@@ -93,12 +118,9 @@ function ProgressBar({
     if (player && !playing) {
       player.playVideo();
     }
-    if (player && stayingPause) {
-      player.pauseVideo();
-    }
 
     setProgressDrag(false);
-  }, [player, playing, setProgressDrag, stayingPause]);
+  }, [player, playing, setProgressDrag]);
 
   const onMouseMove = useCallback(
     (evt) => {
@@ -153,7 +175,6 @@ export default connect(
     duration: player.duration,
     progressDrag: player.progressDrag,
     progressPercent: player.progressPercent,
-    stayingPause: player.stayingPause,
   }),
   {
     setProgressDrag,
