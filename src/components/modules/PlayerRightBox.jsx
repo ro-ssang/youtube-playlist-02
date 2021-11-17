@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Prev } from '../../assets/icons/prev.svg';
+import { ReactComponent as Pause } from '../../assets/icons/pause.svg';
 import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { ReactComponent as Next } from '../../assets/icons/next.svg';
+import { connect } from 'react-redux';
 
 const Container = styled.div`
   height: 100%;
@@ -33,6 +35,12 @@ const PrevIcon = styled(Prev)`
   height: 24px;
   cursor: pointer;
 `;
+const PauseIcon = styled(Pause)`
+  display: block;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+`;
 const PlayIcon = styled(Play)`
   display: block;
   width: 40px;
@@ -46,16 +54,18 @@ const NextIcon = styled(Next)`
   cursor: pointer;
 `;
 
-function PlayerRightBox() {
+function PlayerRightBox({ player, playing }) {
+  const togglePlayState = useCallback(() => {
+    playing ? player.pauseVideo() : player.playVideo();
+  }, [player, playing]);
+
   return (
     <Container>
       <TimeLapse>0:00 / 3:25</TimeLapse>
       <IconContainer>
         <PrevIcon />
       </IconContainer>
-      <IconContainer>
-        <PlayIcon />
-      </IconContainer>
+      <IconContainer onClick={togglePlayState}>{playing ? <PauseIcon /> : <PlayIcon />}</IconContainer>
       <IconContainer>
         <NextIcon />
       </IconContainer>
@@ -63,4 +73,10 @@ function PlayerRightBox() {
   );
 }
 
-export default PlayerRightBox;
+export default connect(
+  ({ player }) => ({
+    player: player.player,
+    playing: player.playing,
+  }),
+  {}
+)(PlayerRightBox);
