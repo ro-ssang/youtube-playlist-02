@@ -2,6 +2,8 @@ import { videosApi } from '../lib/api';
 
 const SHOW_PLAYER = 'player/SHOW_PLAYER';
 const SET_PLAYER = 'player/SET_PLAYER';
+const SET_DURATION = 'player/SET_DURATION';
+const SET_CURRENT_TIME = 'player/SET_CURRENT_TIME';
 const SET_CURRENT_VIDEO_ID = 'player/SET_CURRENT_VIDEO_ID';
 const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
@@ -14,20 +16,28 @@ export const setPlayer = (player) => (dispatch) => {
   dispatch({ type: SHOW_PLAYER });
   dispatch({ type: SET_PLAYER, payload: player });
 
+  let intervalId;
   player.addEventListener('onStateChange', (event) => {
     // 시작되지 않음
     if (event.data === -1) {
       const videoId = event.target.getVideoUrl().split('v=')[1];
+      const duration = event.target.getDuration();
+      dispatch({ type: SET_DURATION, payload: duration });
       dispatch({ type: SET_CURRENT_VIDEO_ID, payload: videoId });
     }
 
     // 재생 중
     if (event.data === 1) {
+      intervalId = setInterval(() => {
+        const currentTime = event.target.getCurrentTime();
+        dispatch({ type: SET_CURRENT_TIME, payload: currentTime });
+      }, 500);
       dispatch({ type: PLAY });
     }
 
     // 일시정지
     if (event.data === 2) {
+      clearInterval(intervalId);
       dispatch({ type: PAUSE });
     }
   });
@@ -49,6 +59,8 @@ export const pause = () => ({ type: PAUSE });
 const initialState = {
   showingPlayer: false,
   player: null,
+  duration: 0,
+  currentTime: 0,
   currentVideoId: null,
   loading: {
     VIDEO_INFO: false,
@@ -63,6 +75,10 @@ function player(state = initialState, action) {
       return { ...state, showingPlayer: true };
     case SET_PLAYER:
       return { ...state, player: action.payload };
+    case SET_DURATION:
+      return { ...state, duration: action.payload };
+    case SET_CURRENT_TIME:
+      return { ...state, currentTime: action.payload };
     case SET_CURRENT_VIDEO_ID:
       return { ...state, currentVideoId: action.payload };
     case GET_VIDEO_INFO:
