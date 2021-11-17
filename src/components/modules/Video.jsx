@@ -1,13 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 
 const Container = styled.div`
-  ${({ theme }) => {
+  ${({ theme, showingPlayer }) => {
     return css`
       position: fixed;
       top: 0px;
       right: ${theme.sizes.scrollBar.width};
-      display: flex;
+      display: ${showingPlayer ? 'flex' : 'none'};
       -webkit-box-align: center;
       align-items: center;
       -webkit-box-pack: center;
@@ -35,9 +36,9 @@ const YoutubePlayer = styled.div`
   }
 `;
 
-function Video() {
+function Video({ showingPlayer }) {
   return (
-    <Container>
+    <Container showingPlayer={showingPlayer}>
       <YoutubePlayer>
         <div id="player"></div>
       </YoutubePlayer>
@@ -45,4 +46,9 @@ function Video() {
   );
 }
 
-export default Video;
+export default connect(
+  ({ player }) => ({
+    showingPlayer: player.showingPlayer,
+  }),
+  {}
+)(Video);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PlayerCenterBox from './PlayerCenterBox';
 import PlayerLeftBox, { BarWrapper as VolumeBarWrapper } from './PlayerLeftBox';
@@ -9,8 +10,7 @@ const Container = styled.div`
   position: fixed;
   bottom: 0px;
   right: 0px;
-  /* display: flex; */
-  display: none;
+  display: ${({ showingPlayer }) => (showingPlayer ? 'flex' : 'none')};
   -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: justify;
@@ -35,9 +35,9 @@ const Container = styled.div`
   }
 `;
 
-function PlayerBar() {
+function PlayerBar({ showingPlayer }) {
   return (
-    <Container>
+    <Container showingPlayer={showingPlayer}>
       <ProgressBar />
       <PlayerLeftBox />
       <PlayerCenterBox
@@ -51,4 +51,6 @@ function PlayerBar() {
   );
 }
 
-export default PlayerBar;
+export default connect(({ player }) => ({
+  showingPlayer: player.showingPlayer,
+}))(PlayerBar);
