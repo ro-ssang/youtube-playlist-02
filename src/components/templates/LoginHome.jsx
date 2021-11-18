@@ -5,6 +5,7 @@ import VideoItem from '../modules/VideoItem';
 import Loader from '../atoms/Loader';
 import { connect } from 'react-redux';
 import { getPopularVideos } from '../../store/videos';
+import AddPlayItemModal from '../modules/AddPlayItemModal';
 
 const Section = styled.section`
   padding: 2rem 2.5rem 0px;
@@ -15,7 +16,7 @@ const VideoList = styled.ul`
   flex-wrap: wrap;
 `;
 
-function LoginHome({ loadingPopularVideos, popularVideos, getPopularVideos }) {
+function LoginHome({ loadingPopularVideos, popularVideos, getPopularVideos, showingAddItemModal }) {
   useEffect(() => {
     getPopularVideos();
   }, [getPopularVideos]);
@@ -40,6 +41,7 @@ function LoginHome({ loadingPopularVideos, popularVideos, getPopularVideos }) {
               return <VideoItem key={id} videoId={id} title={title} thumbnail={thumbnail} rank={index + 1} />;
             })}
           </VideoList>
+          {showingAddItemModal && <AddPlayItemModal />}
         </>
       )}
     </Section>
@@ -47,9 +49,10 @@ function LoginHome({ loadingPopularVideos, popularVideos, getPopularVideos }) {
 }
 
 export default connect(
-  ({ videos }) => ({
+  ({ videos, modal }) => ({
     loadingPopularVideos: videos.loading.GET_POPULAR_VIDEOS,
     popularVideos: videos.popularVideos,
+    showingAddItemModal: modal.showing.addItem,
   }),
   { getPopularVideos }
 )(LoginHome);

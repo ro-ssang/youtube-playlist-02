@@ -5,7 +5,9 @@ import VideoTitle from '../atoms/VideoTitle';
 import { ReactComponent as AddList } from '../../assets/icons/addList.svg';
 import { createIframeByVideoId } from '../../lib/youtubePlayer';
 import { connect } from 'react-redux';
+import { showAddItemModal } from '../../store/modal';
 import { setPlayer, setLooping } from '../../store/player';
+import { selectVideo } from '../../store/videos';
 
 const Container = styled.li`
   position: relative;
@@ -33,7 +35,7 @@ const AddListIcon = styled(AddList)`
   z-index: 2;
 `;
 
-function VideoItem({ videoId, title, thumbnail, rank, player, setPlayer, setLooping }) {
+function VideoItem({ videoId, title, thumbnail, rank, player, setPlayer, setLooping, selectVideo, showAddItemModal }) {
   const onLoadVideo = useCallback(() => {
     if (!player) {
       const iframe = createIframeByVideoId(videoId);
@@ -44,6 +46,15 @@ function VideoItem({ videoId, title, thumbnail, rank, player, setPlayer, setLoop
     setLooping(false);
   }, [videoId, player, setPlayer, setLooping]);
 
+  const onClickAddList = useCallback(
+    (e) => {
+      e.stopPropagation();
+      selectVideo(videoId, videoId);
+      showAddItemModal();
+    },
+    [videoId, selectVideo, showAddItemModal]
+  );
+
   return (
     <Container onClick={onLoadVideo}>
       <ThumbnailContainer>
@@ -52,7 +63,7 @@ function VideoItem({ videoId, title, thumbnail, rank, player, setPlayer, setLoop
       <VideoDescriptionContainer>
         <VideoRank>{rank}</VideoRank>
         <VideoTitle>{title}</VideoTitle>
-        <AddListIcon />
+        <AddListIcon onClick={onClickAddList} />
       </VideoDescriptionContainer>
     </Container>
   );
@@ -65,5 +76,7 @@ export default connect(
   {
     setPlayer,
     setLooping,
+    selectVideo,
+    showAddItemModal,
   }
 )(VideoItem);
