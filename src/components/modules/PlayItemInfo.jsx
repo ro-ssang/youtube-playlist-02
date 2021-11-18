@@ -9,7 +9,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
 import { showDeleteModal, showUpdateModal } from '../../store/modal';
-import { setPlayer } from '../../store/player';
+import { setPlayer, setLooping } from '../../store/player';
 
 const Container = styled.div`
   display: flex;
@@ -70,7 +70,7 @@ const PlayIcon = styled(Play)`
   margin-right: 0.25rem;
 `;
 
-function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModal, showUpdateModal }) {
+function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModal, showUpdateModal, setLooping }) {
   const onPlay = useCallback(() => {
     const {
       params: { playlistId },
@@ -82,7 +82,9 @@ function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModa
     } else {
       player.loadPlaylist({ list: playlistId, listType: 'playlist' });
     }
-  }, [match, player, setPlayer]);
+
+    setLooping(false);
+  }, [match, player, setPlayer, setLooping]);
 
   const onShowDeleteModal = useCallback(() => {
     showDeleteModal();
@@ -135,5 +137,5 @@ export default connect(
     playlistDetail: user.playlistDetail,
     player: player.player,
   }),
-  { setPlayer, showDeleteModal, showUpdateModal }
+  { setPlayer, showDeleteModal, showUpdateModal, setLooping }
 )(withRouter(PlayItemInfo));

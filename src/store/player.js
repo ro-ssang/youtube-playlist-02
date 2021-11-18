@@ -9,6 +9,10 @@ const SET_CURRENT_VIDEO_ID = 'player/SET_CURRENT_VIDEO_ID';
 const SET_PROGRESS_PERCENT = 'player/SET_PROGRESS_PERCENT';
 const SET_VOLUME_PERCENT = 'player/SET_VOLUME_PERCENT';
 const SET_MUTE = 'player/SET_MUTE';
+const SET_LOOP = 'player/SET_LOOP';
+const SET_PREV_PLAYLIST = 'player/SET_PREV_PLAYLIST';
+const SET_PREV_INDEX = 'player/SET_PREV_INDEX';
+const SET_PREV_START_SECONDS = 'player/SET_PREV_START_SECONDS';
 const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
 const PROGRESS_DRAG = 'player/PROGRESS_DRAG';
@@ -19,7 +23,7 @@ const GET_VIDEO_INFO_FAILURE = 'player/GET_VIDEO_INFO_FAILURE';
 
 export const showPlayer = () => ({ type: SHOW_PLAYER });
 export const toggleVideoPlayer = () => ({ type: TOGGLE_VIDEO_PLAYER });
-export const setPlayer = (player) => (dispatch) => {
+export const setPlayer = (player) => (dispatch, getState) => {
   dispatch({ type: SHOW_PLAYER });
   dispatch({ type: SET_PLAYER, payload: player });
 
@@ -62,6 +66,10 @@ export const setPlayer = (player) => (dispatch) => {
       clearInterval(intervalId);
       dispatch({ type: PAUSE });
     }
+
+    if (event.data === 5) {
+      event.target.seekTo(getState().player.prevStartSeconds);
+    }
   });
 };
 export const getVideoInfo = (videoId) => async (dispatch) => {
@@ -83,6 +91,10 @@ export const setProgressPercent = (percent) => ({ type: SET_PROGRESS_PERCENT, pa
 export const setVolumePercent = (percent) => ({ type: SET_VOLUME_PERCENT, payload: percent });
 export const setCurrentTime = (sec) => ({ type: SET_CURRENT_TIME, payload: sec });
 export const setMute = (bool) => ({ type: SET_MUTE, payload: bool });
+export const setLooping = (bool) => ({ type: SET_LOOP, payload: bool });
+export const setPrevPlaylist = (playlist) => ({ type: SET_PREV_PLAYLIST, payload: playlist });
+export const setPrevIndex = (index) => ({ type: SET_PREV_INDEX, payload: index });
+export const setPrevStartSeconds = (sec) => ({ type: SET_PREV_START_SECONDS, payload: sec });
 
 const initialState = {
   showingPlayer: false,
@@ -101,6 +113,10 @@ const initialState = {
   progressPercent: 0,
   volumePercent: 50,
   isMute: false,
+  isLoop: false,
+  prevPlaylist: null,
+  prevIndex: 0,
+  prevStartSeconds: 0,
 };
 
 function player(state = initialState, action) {
@@ -123,6 +139,14 @@ function player(state = initialState, action) {
       return { ...state, volumePercent: action.payload };
     case SET_MUTE:
       return { ...state, isMute: action.payload };
+    case SET_LOOP:
+      return { ...state, isLoop: action.payload };
+    case SET_PREV_PLAYLIST:
+      return { ...state, prevPlaylist: action.payload };
+    case SET_PREV_INDEX:
+      return { ...state, prevIndex: action.payload };
+    case SET_PREV_START_SECONDS:
+      return { ...state, prevStartSeconds: action.payload };
     case GET_VIDEO_INFO:
       return { ...state, loading: { ...state.loading, VIDEO_INFO: true } };
     case GET_VIDEO_INFO_SUCCESS:

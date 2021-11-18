@@ -2,12 +2,21 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Up } from '../../assets/icons/up.svg';
 import { ReactComponent as Loop } from '../../assets/icons/loop.svg';
+import { ReactComponent as Repeat } from '../../assets/icons/repeat.svg';
 import { ReactComponent as Shuffle } from '../../assets/icons/shuffle.svg';
 import { ReactComponent as Volume } from '../../assets/icons/volume.svg';
 import { ReactComponent as Mute } from '../../assets/icons/mute.svg';
 import VolumeBar from './VolumeBar';
 import { connect } from 'react-redux';
-import { setMute, setVolumePercent, toggleVideoPlayer } from '../../store/player';
+import {
+  setMute,
+  setVolumePercent,
+  toggleVideoPlayer,
+  setLooping,
+  setPrevPlaylist,
+  setPrevIndex,
+  setPrevStartSeconds,
+} from '../../store/player';
 
 const Container = styled.div`
   height: 100%;
@@ -40,6 +49,12 @@ const LoopIcon = styled(Loop)`
   height: 24px;
   cursor: pointer;
 `;
+const RepeatIcon = styled(Repeat)`
+  display: block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+`;
 const ShuffleIcon = styled(Shuffle)`
   display: block;
   width: 24px;
@@ -67,6 +82,14 @@ function PlayerLeftBox({
   setVolumePercent,
   toggleVideoPlayer,
   showingVideoPlayer,
+  videoInfo,
+  isLoop,
+  setLooping,
+  prevPlaylist,
+  setPrevPlaylist,
+  prevIndex,
+  setPrevIndex,
+  setPrevStartSeconds,
 }) {
   const onClickVolume = useCallback(() => {
     if (player) {
@@ -82,14 +105,47 @@ function PlayerLeftBox({
     }
   }, [player, isMute, setMute, setVolumePercent]);
 
+  const onClickLoop = useCallback(() => {
+    if (player) {
+      setPrevPlaylist(player.getPlaylist());
+      setPrevStartSeconds(player.getCurrentTime());
+
+      if (isLoop) {
+        setPrevIndex(0);
+        player.cuePlaylist(prevPlaylist, prevIndex);
+        setTimeout(() => {
+          player.cuePlaylist(prevPlaylist, prevIndex);
+          player.setLoop(false);
+          setLooping(false);
+        }, 500);
+      } else {
+        setPrevIndex(player.getPlaylistIndex());
+        player.cuePlaylist(videoInfo.id, 0);
+        setTimeout(() => {
+          player.cuePlaylist(videoInfo.id, 0);
+          player.setLoop(true);
+          setLooping(true);
+        }, 500);
+      }
+    }
+  }, [
+    player,
+    videoInfo,
+    isLoop,
+    setLooping,
+    prevPlaylist,
+    setPrevPlaylist,
+    prevIndex,
+    setPrevIndex,
+    setPrevStartSeconds,
+  ]);
+
   return (
     <Container>
       <IconContainer>
         <UpIcon onClick={toggleVideoPlayer} showing={showingVideoPlayer.toString()} />
       </IconContainer>
-      <IconContainer>
-        <LoopIcon />
-      </IconContainer>
+      <IconContainer onClick={onClickLoop}>{isLoop ? <RepeatIcon /> : <LoopIcon />}</IconContainer>
       <IconContainer>
         <ShuffleIcon />
       </IconContainer>
@@ -107,10 +163,18 @@ export default connect(
     isMute: player.isMute,
     volumePercent: player.volumePercent,
     showingVideoPlayer: player.showingVideoPlayer,
+    videoInfo: player.videoInfo,
+    isLoop: player.isLoop,
+    prevPlaylist: player.prevPlaylist,
+    prevIndex: player.prevIndex,
   }),
   {
     setMute,
     setVolumePercent,
     toggleVideoPlayer,
+    setLooping,
+    setPrevPlaylist,
+    setPrevIndex,
+    setPrevStartSeconds,
   }
 )(PlayerLeftBox);

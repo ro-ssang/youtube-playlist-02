@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
-import { setPlayer } from '../../store/player';
+import { setPlayer, setLooping } from '../../store/player';
 import Th from '../atoms/Th';
 import Tr from '../atoms/Tr';
 import AddPlayItemModal from './AddPlayItemModal';
@@ -30,6 +30,7 @@ function PlayItemTable({
   setPlayer,
   showingAddItemModal,
   showingDeleteItemModal,
+  setLooping,
 }) {
   const onPlay = useCallback(
     (index) => {
@@ -43,8 +44,10 @@ function PlayItemTable({
       } else {
         player.loadPlaylist({ list: playlistId, listType: 'playlist', index });
       }
+
+      setLooping(false);
     },
-    [match, player, setPlayer]
+    [match, player, setPlayer, setLooping]
   );
 
   return (
@@ -102,5 +105,5 @@ export default connect(
     showingDeleteItemModal: modal.showing.deleteItem,
     player: player.player,
   }),
-  { setPlayer }
+  { setPlayer, setLooping }
 )(withRouter(PlayItemTable));
