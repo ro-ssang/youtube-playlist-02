@@ -64,17 +64,35 @@ function PlayerRightBox({ player, playing, duration, currentTime }) {
     }
   }, [player, playing]);
 
+  const onClickPrev = useCallback(() => {
+    if (player) {
+      if (player.getPlaylist()?.length > 1) {
+        console.log('prev');
+        player.previousVideo();
+      }
+    }
+  }, [player]);
+
+  const onClickNext = useCallback(() => {
+    if (player) {
+      if (player.getPlaylist()?.length > 1) {
+        console.log('next');
+        player.nextVideo();
+      }
+    }
+  }, [player]);
+
   return (
     <Container>
       <TimeLapse>
         {formatTime(currentTime)} / {formatTime(duration)}
       </TimeLapse>
       <IconContainer>
-        <PrevIcon />
+        <PrevIcon onClick={onClickPrev} />
       </IconContainer>
       <IconContainer onClick={togglePlayState}>{playing ? <PauseIcon /> : <PlayIcon />}</IconContainer>
       <IconContainer>
-        <NextIcon />
+        <NextIcon onClick={onClickNext} />
       </IconContainer>
     </Container>
   );
