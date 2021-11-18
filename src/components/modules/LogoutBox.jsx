@@ -7,6 +7,7 @@ import { CLIENT_ID, LS_PROFILE } from '../../contants';
 import Avatar from '../atoms/Avatar';
 import { logout } from '../../store/auth';
 import { setProfile } from '../../store/user';
+import { showPlayer, setPlayer } from '../../store/player';
 
 const Username = styled.div`
   font-size: 0.8125rem;
@@ -17,7 +18,7 @@ const LogoutLink = styled(Link)`
   cursor: pointer;
 `;
 
-function LogoutBox({ profile, setProfile, logout }) {
+function LogoutBox({ profile, setProfile, logout, showPlayer, setPlayer }) {
   useEffect(() => {
     const { name, imageUrl } = JSON.parse(localStorage.getItem(LS_PROFILE));
     setProfile(name, imageUrl);
@@ -28,7 +29,9 @@ function LogoutBox({ profile, setProfile, logout }) {
     localStorage.clear();
     logout && logout();
     setProfile(null);
-  }, [logout, setProfile]);
+    setPlayer(null);
+    showPlayer(false);
+  }, [logout, setProfile, showPlayer, setPlayer]);
 
   return (
     <GoogleLogout
@@ -56,5 +59,7 @@ export default connect(
   {
     logout,
     setProfile,
+    setPlayer,
+    showPlayer,
   }
 )(LogoutBox);

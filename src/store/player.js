@@ -22,56 +22,58 @@ const GET_VIDEO_INFO = 'player/GET_VIDEO_INFO';
 const GET_VIDEO_INFO_SUCCESS = 'player/GET_VIDEO_INFO_SUCCESS';
 const GET_VIDEO_INFO_FAILURE = 'player/GET_VIDEO_INFO_FAILURE';
 
-export const showPlayer = () => ({ type: SHOW_PLAYER });
+export const showPlayer = (bool) => ({ type: SHOW_PLAYER, payload: bool });
 export const toggleVideoPlayer = () => ({ type: TOGGLE_VIDEO_PLAYER });
 export const setPlayer = (player) => (dispatch, getState) => {
-  dispatch({ type: SHOW_PLAYER });
+  dispatch({ type: SHOW_PLAYER, payload: true });
   dispatch({ type: SET_PLAYER, payload: player });
 
-  let intervalId;
-  player.addEventListener('onStateChange', (event) => {
-    // 시작되지 않음
-    if (event.data === -1) {
-      const videoId = event.target.getVideoUrl().split('v=')[1];
-      const currentTime = event.target.getCurrentTime();
-      const duration = event.target.getDuration();
-
-      dispatch({ type: SET_CURRENT_TIME, payload: currentTime });
-      dispatch({ type: SET_DURATION, payload: duration });
-      dispatch({ type: SET_CURRENT_VIDEO_ID, payload: videoId });
-    }
-
-    // 종료됨
-    if (event.data === 0) {
-      const duration = event.target.getDuration();
-
-      clearInterval(intervalId);
-      dispatch({ type: SET_CURRENT_TIME, payload: duration });
-      dispatch({ type: PAUSE });
-    }
-
-    // 재생 중
-    if (event.data === 1) {
-      const duration = event.target.getDuration();
-      dispatch({ type: SET_DURATION, payload: duration });
-
-      intervalId = setInterval(() => {
+  if (player) {
+    let intervalId;
+    player.addEventListener('onStateChange', (event) => {
+      // 시작되지 않음
+      if (event.data === -1) {
+        const videoId = event.target.getVideoUrl().split('v=')[1];
         const currentTime = event.target.getCurrentTime();
+        const duration = event.target.getDuration();
+
         dispatch({ type: SET_CURRENT_TIME, payload: currentTime });
-      }, 500);
-      dispatch({ type: PLAY });
-    }
+        dispatch({ type: SET_DURATION, payload: duration });
+        dispatch({ type: SET_CURRENT_VIDEO_ID, payload: videoId });
+      }
 
-    // 일시정지
-    if (event.data === 2) {
-      clearInterval(intervalId);
-      dispatch({ type: PAUSE });
-    }
+      // 종료됨
+      if (event.data === 0) {
+        const duration = event.target.getDuration();
 
-    if (event.data === 5) {
-      event.target.seekTo(getState().player.prevStartSeconds);
-    }
-  });
+        clearInterval(intervalId);
+        dispatch({ type: SET_CURRENT_TIME, payload: duration });
+        dispatch({ type: PAUSE });
+      }
+
+      // 재생 중
+      if (event.data === 1) {
+        const duration = event.target.getDuration();
+        dispatch({ type: SET_DURATION, payload: duration });
+
+        intervalId = setInterval(() => {
+          const currentTime = event.target.getCurrentTime();
+          dispatch({ type: SET_CURRENT_TIME, payload: currentTime });
+        }, 500);
+        dispatch({ type: PLAY });
+      }
+
+      // 일시정지
+      if (event.data === 2) {
+        clearInterval(intervalId);
+        dispatch({ type: PAUSE });
+      }
+
+      if (event.data === 5) {
+        event.target.seekTo(getState().player.prevStartSeconds);
+      }
+    });
+  }
 };
 export const getVideoInfo = (videoId) => async (dispatch) => {
   dispatch({ type: GET_VIDEO_INFO });
@@ -125,7 +127,7 @@ const initialState = {
 function player(state = initialState, action) {
   switch (action.type) {
     case SHOW_PLAYER:
-      return { ...state, showingPlayer: true };
+      return { ...state, showingPlayer: action.payload };
     case TOGGLE_VIDEO_PLAYER:
       return { ...state, showingVideoPlayer: !state.showingVideoPlayer };
     case SET_PLAYER:
