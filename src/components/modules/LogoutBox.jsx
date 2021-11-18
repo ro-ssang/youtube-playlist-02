@@ -18,20 +18,20 @@ const LogoutLink = styled(Link)`
   cursor: pointer;
 `;
 
-function LogoutBox({ profile, setProfile, logout, showPlayer, setPlayer }) {
+function LogoutBox({ profile, setProfile, logout, showPlayer, setPlayer, intervalId }) {
   useEffect(() => {
     const { name, imageUrl } = JSON.parse(localStorage.getItem(LS_PROFILE));
     setProfile(name, imageUrl);
   }, [setProfile]);
 
   const onSuccess = useCallback(() => {
-    console.log('Logout made successfully');
     localStorage.clear();
     logout && logout();
     setProfile(null);
     setPlayer(null);
     showPlayer(false);
-  }, [logout, setProfile, showPlayer, setPlayer]);
+    clearInterval(intervalId);
+  }, [logout, setProfile, showPlayer, setPlayer, intervalId]);
 
   return (
     <GoogleLogout
@@ -53,8 +53,9 @@ function LogoutBox({ profile, setProfile, logout, showPlayer, setPlayer }) {
 }
 
 export default connect(
-  ({ user }) => ({
+  ({ user, player }) => ({
     profile: user.profile,
+    intervalId: player.intervalId,
   }),
   {
     logout,

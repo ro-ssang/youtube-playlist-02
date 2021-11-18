@@ -26,7 +26,6 @@ const Text = styled.span``;
 function LoginButton({ width, login }) {
   const onSuccess = useCallback(
     (res) => {
-      console.log('[Login Success]', res);
       localStorage.setItem(LS_PROFILE, JSON.stringify(res.profileObj));
       localStorage.setItem(LS_TOKEN, res.accessToken);
       login && login();

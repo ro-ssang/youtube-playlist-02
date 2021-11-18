@@ -14,6 +14,7 @@ const SET_PREV_PLAYLIST = 'player/SET_PREV_PLAYLIST';
 const SET_PREV_INDEX = 'player/SET_PREV_INDEX';
 const SET_PREV_START_SECONDS = 'player/SET_PREV_START_SECONDS';
 const SET_SHUFFLE = 'player/SET_SHUFFLE';
+const SET_INTERVAL_ID = 'playst/SET_INTERVAL_ID';
 const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
 const PROGRESS_DRAG = 'player/PROGRESS_DRAG';
@@ -56,10 +57,12 @@ export const setPlayer = (player) => (dispatch, getState) => {
         const duration = event.target.getDuration();
         dispatch({ type: SET_DURATION, payload: duration });
 
-        intervalId = setInterval(() => {
+        const interId = setInterval(() => {
           const currentTime = event.target.getCurrentTime();
           dispatch({ type: SET_CURRENT_TIME, payload: currentTime });
         }, 500);
+        intervalId = interId;
+        dispatch({ type: SET_INTERVAL_ID, payload: interId });
         dispatch({ type: PLAY });
       }
 
@@ -99,6 +102,7 @@ export const setPrevPlaylist = (playlist) => ({ type: SET_PREV_PLAYLIST, payload
 export const setPrevIndex = (index) => ({ type: SET_PREV_INDEX, payload: index });
 export const setPrevStartSeconds = (sec) => ({ type: SET_PREV_START_SECONDS, payload: sec });
 export const setShuffle = (bool) => ({ type: SET_SHUFFLE, payload: bool });
+export const setIntervalId = (id) => ({ type: SET_INTERVAL_ID, payload: id });
 
 const initialState = {
   showingPlayer: false,
@@ -122,6 +126,7 @@ const initialState = {
   prevPlaylist: null,
   prevIndex: 0,
   prevStartSeconds: 0,
+  intervalId: null,
 };
 
 function player(state = initialState, action) {
@@ -154,6 +159,8 @@ function player(state = initialState, action) {
       return { ...state, prevStartSeconds: action.payload };
     case SET_SHUFFLE:
       return { ...state, isShuffle: action.payload };
+    case SET_INTERVAL_ID:
+      return { ...state, intervalId: action.payload };
     case GET_VIDEO_INFO:
       return { ...state, loading: { ...state.loading, VIDEO_INFO: true } };
     case GET_VIDEO_INFO_SUCCESS:
