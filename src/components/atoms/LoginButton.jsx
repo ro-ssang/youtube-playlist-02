@@ -36,7 +36,8 @@ function LoginButton({ width, login }) {
   );
 
   const onFailure = useCallback((res) => {
-    console.log('[Logout filed]');
+    console.log(res);
+    console.log('[Login failed]');
   }, []);
 
   return (
