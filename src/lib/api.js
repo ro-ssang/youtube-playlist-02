@@ -53,10 +53,13 @@ export const playlistsApi = {
           title,
           description,
         },
+        status: {
+          privacyStatus: 'unlisted',
+        },
       },
       {
         params: {
-          part: 'snippet',
+          part: 'snippet,status',
           access_token: localStorage.getItem(LS_TOKEN),
         },
       }
@@ -76,10 +79,13 @@ export const playlistsApi = {
         snippet: {
           title,
         },
+        status: {
+          privacyStatus: 'unlisted',
+        },
       },
       {
         params: {
-          part: 'snippet',
+          part: 'snippet,status',
           access_token: localStorage.getItem(LS_TOKEN),
         },
       }
