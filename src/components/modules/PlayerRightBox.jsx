@@ -67,7 +67,6 @@ function PlayerRightBox({ player, playing, duration, currentTime }) {
   const onClickPrev = useCallback(() => {
     if (player) {
       if (player.getPlaylist()?.length > 1) {
-        console.log('prev');
         player.previousVideo();
       }
     }
@@ -76,7 +75,6 @@ function PlayerRightBox({ player, playing, duration, currentTime }) {
   const onClickNext = useCallback(() => {
     if (player) {
       if (player.getPlaylist()?.length > 1) {
-        console.log('next');
         player.nextVideo();
       }
     }

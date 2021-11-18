@@ -13,6 +13,7 @@ const SET_LOOP = 'player/SET_LOOP';
 const SET_PREV_PLAYLIST = 'player/SET_PREV_PLAYLIST';
 const SET_PREV_INDEX = 'player/SET_PREV_INDEX';
 const SET_PREV_START_SECONDS = 'player/SET_PREV_START_SECONDS';
+const SET_SHUFFLE = 'player/SET_SHUFFLE';
 const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
 const PROGRESS_DRAG = 'player/PROGRESS_DRAG';
@@ -95,6 +96,7 @@ export const setLooping = (bool) => ({ type: SET_LOOP, payload: bool });
 export const setPrevPlaylist = (playlist) => ({ type: SET_PREV_PLAYLIST, payload: playlist });
 export const setPrevIndex = (index) => ({ type: SET_PREV_INDEX, payload: index });
 export const setPrevStartSeconds = (sec) => ({ type: SET_PREV_START_SECONDS, payload: sec });
+export const setShuffle = (bool) => ({ type: SET_SHUFFLE, payload: bool });
 
 const initialState = {
   showingPlayer: false,
@@ -114,6 +116,7 @@ const initialState = {
   volumePercent: 50,
   isMute: false,
   isLoop: false,
+  isShuffle: false,
   prevPlaylist: null,
   prevIndex: 0,
   prevStartSeconds: 0,
@@ -147,6 +150,8 @@ function player(state = initialState, action) {
       return { ...state, prevIndex: action.payload };
     case SET_PREV_START_SECONDS:
       return { ...state, prevStartSeconds: action.payload };
+    case SET_SHUFFLE:
+      return { ...state, isShuffle: action.payload };
     case GET_VIDEO_INFO:
       return { ...state, loading: { ...state.loading, VIDEO_INFO: true } };
     case GET_VIDEO_INFO_SUCCESS:

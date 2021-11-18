@@ -16,6 +16,7 @@ import {
   setPrevPlaylist,
   setPrevIndex,
   setPrevStartSeconds,
+  setShuffle,
 } from '../../store/player';
 
 const Container = styled.div`
@@ -90,6 +91,8 @@ function PlayerLeftBox({
   prevIndex,
   setPrevIndex,
   setPrevStartSeconds,
+  isShuffle,
+  setShuffle,
 }) {
   const onClickVolume = useCallback(() => {
     if (player) {
@@ -140,6 +143,18 @@ function PlayerLeftBox({
     setPrevStartSeconds,
   ]);
 
+  const onClickShuffle = useCallback(() => {
+    if (player) {
+      if (isShuffle) {
+        setShuffle(false);
+        player.setShuffle(false);
+      } else {
+        setShuffle(true);
+        player.setShuffle(true);
+      }
+    }
+  }, [player, isShuffle, setShuffle]);
+
   return (
     <Container>
       <IconContainer>
@@ -147,7 +162,7 @@ function PlayerLeftBox({
       </IconContainer>
       <IconContainer onClick={onClickLoop}>{isLoop ? <RepeatIcon /> : <LoopIcon />}</IconContainer>
       <IconContainer>
-        <ShuffleIcon />
+        <ShuffleIcon onClick={onClickShuffle} />
       </IconContainer>
       <IconContainer>
         {isMute || !volumePercent ? <MuteIcon onClick={onClickVolume} /> : <VolumeIcon onClick={onClickVolume} />}
@@ -165,6 +180,7 @@ export default connect(
     showingVideoPlayer: player.showingVideoPlayer,
     videoInfo: player.videoInfo,
     isLoop: player.isLoop,
+    isShuffle: player.isShuffle,
     prevPlaylist: player.prevPlaylist,
     prevIndex: player.prevIndex,
   }),
@@ -176,5 +192,6 @@ export default connect(
     setPrevPlaylist,
     setPrevIndex,
     setPrevStartSeconds,
+    setShuffle,
   }
 )(PlayerLeftBox);
