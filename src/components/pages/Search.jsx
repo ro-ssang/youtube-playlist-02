@@ -6,6 +6,7 @@ import SectionTitle from '../atoms/SectionTitle';
 import VideoItem from '../modules/VideoItem';
 import { getSearchVideos } from '../../store/videos';
 import Loader from '../atoms/Loader';
+import AddPlayItemModal from '../modules/AddPlayItemModal';
 
 const Section = styled.section`
   padding: 2rem 2.5rem 0px;
@@ -16,7 +17,7 @@ const VideoList = styled.ul`
   flex-wrap: wrap;
 `;
 
-function Search({ location, loadingSearchVideos, searchVideos, getSearchVideos }) {
+function Search({ location, loadingSearchVideos, searchVideos, getSearchVideos, showingAddItemModal }) {
   useEffect(() => {
     const { search } = location;
     const keyword = new URLSearchParams(search).get('keyword');
@@ -46,6 +47,7 @@ function Search({ location, loadingSearchVideos, searchVideos, getSearchVideos }
                 );
               })}
             </VideoList>
+            {showingAddItemModal && <AddPlayItemModal />}
           </>
         )}
       </VideoList>
@@ -54,9 +56,10 @@ function Search({ location, loadingSearchVideos, searchVideos, getSearchVideos }
 }
 
 export default connect(
-  ({ videos }) => ({
+  ({ videos, modal }) => ({
     loadingSearchVideos: videos.loading.GET_SEARCH_VIDEOS,
     searchVideos: videos.searchVideos,
+    showingAddItemModal: modal.showing.addItem,
   }),
   {
     getSearchVideos,
