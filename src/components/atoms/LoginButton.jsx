@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as Google } from '../../assets/icons/google.svg';
 import { CLIENT_ID, LS_PROFILE, LS_TOKEN } from '../../contants';
-import { refreshTokenSetup } from '../../lib/refreshToken';
 import { login } from '../../store/auth';
 
 const Container = styled.div`
@@ -27,7 +26,6 @@ const Text = styled.span``;
 function LoginButton({ width, login }) {
   const onSuccess = useCallback(
     (res) => {
-      refreshTokenSetup(res);
       localStorage.setItem(LS_PROFILE, JSON.stringify(res.profileObj));
       localStorage.setItem(LS_TOKEN, res.accessToken);
       login && login();

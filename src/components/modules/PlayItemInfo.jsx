@@ -5,7 +5,6 @@ import PlayListData from '../atoms/PlayListData';
 import { ReactComponent as Pen } from '../../assets/icons/pen.svg';
 import { ReactComponent as Play } from '../../assets/icons/play.svg';
 import { ReactComponent as TrashCan } from '../../assets/icons/trash-can.svg';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
 import { showDeleteModal, showUpdateModal } from '../../store/modal';
@@ -70,21 +69,28 @@ const PlayIcon = styled(Play)`
   margin-right: 0.25rem;
 `;
 
-function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModal, showUpdateModal, setLooping }) {
+function PlayItemInfo({ playlistDetail, playItems, player, setPlayer, showDeleteModal, showUpdateModal, setLooping }) {
   const onPlay = useCallback(() => {
-    const {
-      params: { playlistId },
-    } = match;
+    const playItemsId = playItems.map((playItem) => {
+      const {
+        snippet: {
+          resourceId: { videoId },
+        },
+      } = playItem;
+      return videoId;
+    });
+
+    const playlistId = playItemsId.join(',');
 
     if (!player) {
       const iframe = createIframeByPlaylistId(playlistId);
       setPlayer(iframe);
     } else {
-      player.loadPlaylist({ list: playlistId, listType: 'playlist' });
+      player.loadPlaylist({ listType: 'playlist', playlist: playlistId });
     }
 
     setLooping(false);
-  }, [match, player, setPlayer, setLooping]);
+  }, [player, setPlayer, setLooping, playItems]);
 
   const onShowDeleteModal = useCallback(() => {
     showDeleteModal();
@@ -135,7 +141,8 @@ function PlayItemInfo({ match, playlistDetail, player, setPlayer, showDeleteModa
 export default connect(
   ({ user, player }) => ({
     playlistDetail: user.playlistDetail,
+    playItems: user.playItems,
     player: player.player,
   }),
   { setPlayer, showDeleteModal, showUpdateModal, setLooping }
-)(withRouter(PlayItemInfo));
+)(PlayItemInfo);

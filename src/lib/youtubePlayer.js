@@ -22,7 +22,7 @@ export function createIframeByPlaylistId(playlistId, index = 0) {
     height: '360',
     width: '640',
     events: {
-      onReady: (event) => event.target.loadPlaylist({ list: playlistId, listType: 'playlist', index }),
+      onReady: (event) => event.target.loadPlaylist({ listType: 'playlist', playlist: playlistId, index }),
     },
   });
 }

@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import { createIframeByPlaylistId } from '../../lib/youtubePlayer';
 import { setPlayer, setLooping } from '../../store/player';
@@ -34,20 +33,27 @@ function PlayItemTable({
 }) {
   const onPlay = useCallback(
     (index) => {
-      const {
-        params: { playlistId },
-      } = match;
+      const playItemsId = playItems.map((playItem) => {
+        const {
+          snippet: {
+            resourceId: { videoId },
+          },
+        } = playItem;
+        return videoId;
+      });
+
+      const playlistId = playItemsId.join(',');
 
       if (!player) {
         const iframe = createIframeByPlaylistId(playlistId, index);
         setPlayer(iframe);
       } else {
-        player.loadPlaylist({ list: playlistId, listType: 'playlist', index });
+        player.loadPlaylist({ listType: 'playlist', playlist: playlistId, index });
       }
 
       setLooping(false);
     },
-    [match, player, setPlayer, setLooping]
+    [player, setPlayer, setLooping, playItems]
   );
 
   return (
@@ -106,4 +112,4 @@ export default connect(
     player: player.player,
   }),
   { setPlayer, setLooping }
-)(withRouter(PlayItemTable));
+)(PlayItemTable);
