@@ -34,13 +34,15 @@ function LoginButton({ width, login }) {
       googleAuth.attachClickHandler(
         buttonRef.current,
         {
-          scope: 'profile',
+          scope: 'https://www.googleapis.com/auth/youtube',
         },
         (e) => {
           const basicProfile = e.getBasicProfile();
           const displayName = basicProfile.getName();
           const photoURL = basicProfile.getImageUrl();
           const access_token = e.getAuthResponse().access_token;
+
+          console.log(access_token);
 
           localStorage.setItem(LS_PROFILE, JSON.stringify({ name: displayName, imageUrl: photoURL }));
           localStorage.setItem(LS_TOKEN, access_token);
