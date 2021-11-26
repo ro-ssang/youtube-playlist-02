@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
-import { GoogleLogout } from 'react-google-login';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { CLIENT_ID, LS_PROFILE } from '../../contants';
+import { LS_PROFILE } from '../../contants';
 import Avatar from '../atoms/Avatar';
 import { logout } from '../../store/auth';
 import { setProfile } from '../../store/user';
@@ -24,7 +23,7 @@ function LogoutBox({ profile, setProfile, logout, showPlayer, setPlayer, interva
     setProfile(name, imageUrl);
   }, [setProfile]);
 
-  const onSuccess = useCallback(() => {
+  const onClickLogout = useCallback(() => {
     localStorage.clear();
     logout && logout();
     setProfile(null);
@@ -34,21 +33,15 @@ function LogoutBox({ profile, setProfile, logout, showPlayer, setPlayer, interva
   }, [logout, setProfile, showPlayer, setPlayer, intervalId]);
 
   return (
-    <GoogleLogout
-      clientId={CLIENT_ID}
-      render={(renderProps) => (
-        <>
-          <Avatar avatarUrl={profile.avatarUrl} />
-          <div>
-            <Username>{profile.name}</Username>
-            <LogoutLink to="/" onClick={renderProps.onClick} disabled={renderProps.disabled}>
-              로그아웃
-            </LogoutLink>
-          </div>
-        </>
-      )}
-      onLogoutSuccess={onSuccess}
-    ></GoogleLogout>
+    <>
+      <Avatar avatarUrl={profile.avatarUrl} />
+      <div>
+        <Username>{profile.name}</Username>
+        <LogoutLink to="/" onClick={onClickLogout}>
+          로그아웃
+        </LogoutLink>
+      </div>
+    </>
   );
 }
 
