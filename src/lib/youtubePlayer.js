@@ -14,6 +14,9 @@ export function createIframeByVideoId(videoId) {
     events: {
       onReady: (event) => event.target.playVideo(),
     },
+    playerVars: {
+      controls: 0,
+    },
   });
 }
 
@@ -23,6 +26,9 @@ export function createIframeByPlaylistId(playlistId, index = 0) {
     width: '640',
     events: {
       onReady: (event) => event.target.loadPlaylist({ listType: 'playlist', playlist: playlistId, index }),
+    },
+    playerVars: {
+      controls: 0,
     },
   });
 }
