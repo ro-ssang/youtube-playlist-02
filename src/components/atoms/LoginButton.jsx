@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as Google } from '../../assets/icons/google.svg';
-import { CLIENT_ID, LS_PROFILE, LS_TOKEN } from '../../contants';
+import { LS_PROFILE, LS_TOKEN } from '../../contants';
 import { login } from '../../store/auth';
 
 const Container = styled.div`
@@ -28,7 +28,7 @@ function LoginButton({ width, login }) {
   useEffect(() => {
     window.gapi.load('auth2', function () {
       const googleAuth = window.gapi.auth2.init({
-        client_id: '478590049856-de58rj0tomsahk0tpvq925st7jahf2tk.apps.googleusercontent.com',
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
       });
 
       googleAuth.attachClickHandler(

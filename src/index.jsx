@@ -6,6 +6,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './App';
 import rootReducer from './store';
 import ReduxThunk from 'redux-thunk';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(ReduxThunk)));
 
