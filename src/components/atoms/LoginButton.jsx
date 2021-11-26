@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import GoogleLogin from 'react-google-login';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as Google } from '../../assets/icons/google.svg';
@@ -24,34 +23,38 @@ const GoogleIcon = styled(Google)`
 const Text = styled.span``;
 
 function LoginButton({ width, login }) {
-  const onSuccess = useCallback(
-    (res) => {
-      localStorage.setItem(LS_PROFILE, JSON.stringify(res.profileObj));
-      localStorage.setItem(LS_TOKEN, res.accessToken);
-      login && login();
-    },
-    [login]
-  );
+  const buttonRef = useRef();
 
-  const onFailure = useCallback((res) => {
-    console.log(res);
-    console.log('[Login failed]');
-  }, []);
+  useEffect(() => {
+    window.gapi.load('auth2', function () {
+      const googleAuth = window.gapi.auth2.init({
+        client_id: '478590049856-de58rj0tomsahk0tpvq925st7jahf2tk.apps.googleusercontent.com',
+      });
+
+      googleAuth.attachClickHandler(
+        buttonRef.current,
+        {
+          scope: 'profile',
+        },
+        (e) => {
+          const basicProfile = e.getBasicProfile();
+          const displayName = basicProfile.getName();
+          const photoURL = basicProfile.getImageUrl();
+          const access_token = e.getAuthResponse().access_token;
+
+          localStorage.setItem(LS_PROFILE, JSON.stringify({ name: displayName, imageUrl: photoURL }));
+          localStorage.setItem(LS_TOKEN, access_token);
+          login && login();
+        }
+      );
+    });
+  }, [login]);
 
   return (
-    <GoogleLogin
-      clientId={CLIENT_ID}
-      render={(renderProps) => (
-        <Container width={width} onClick={renderProps.onClick} disabled={renderProps.disabled}>
-          <GoogleIcon />
-          <Text>Sign in With Google</Text>
-        </Container>
-      )}
-      onSuccess={onSuccess}
-      onFailure={onFailure}
-      cookiePolicy={'single_host_origin'}
-      isSignedIn={true}
-    />
+    <Container width={width} ref={buttonRef}>
+      <GoogleIcon />
+      <Text>Sign in With Google</Text>
+    </Container>
   );
 }
 
