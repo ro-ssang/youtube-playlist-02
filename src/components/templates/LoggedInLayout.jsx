@@ -88,18 +88,20 @@ function LoggedInLayout({
             <BrowseItem />
           </BrowseList>
           {isLogin && loadingPlaylists && <Loader />}
-          {isLogin && !loadingPlaylists && playlists && (
+          {isLogin && (
             <>
               <ListTitle>플레이리스트</ListTitle>
               <PlayList>
                 <AddPlayItem onClick={onClickNewPlaylist} />
-                {playlists.map((item) => {
-                  const {
-                    id,
-                    snippet: { title },
-                  } = item;
-                  return <PlayItem key={id} text={title} path={`/playlist/${id}`} />;
-                })}
+                {!loadingPlaylists &&
+                  playlists &&
+                  playlists.map((item) => {
+                    const {
+                      id,
+                      snippet: { title },
+                    } = item;
+                    return <PlayItem key={id} text={title} path={`/playlist/${id}`} />;
+                  })}
               </PlayList>
             </>
           )}

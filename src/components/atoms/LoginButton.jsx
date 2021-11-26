@@ -42,8 +42,6 @@ function LoginButton({ width, login }) {
           const photoURL = basicProfile.getImageUrl();
           const access_token = e.getAuthResponse().access_token;
 
-          console.log(access_token);
-
           localStorage.setItem(LS_PROFILE, JSON.stringify({ name: displayName, imageUrl: photoURL }));
           localStorage.setItem(LS_TOKEN, access_token);
           login && login();
